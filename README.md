@@ -4,7 +4,14 @@ A static prototype of a multi-question open poll, recreated from the [ci-polis d
 
 Everything runs in the browser on synthetic data. Nothing is sent anywhere. State is kept in `localStorage`, and "Reset demo" restores the starting data.
 
-## Run it
+## Live demos
+
+- Oakland data centers (`main`): https://thebloomproject.github.io/ci-polis-demo/
+- SFUSD classroom technology (`sfusd-demo`): https://thebloomproject.github.io/ci-polis-demo/sfusd/
+
+Both are rebuilt by `.github/workflows/pages.yml` whenever either branch is pushed.
+
+## Run it locally
 
 ```bash
 python3 -m http.server 8766
