@@ -1,0 +1,45 @@
+# Publishes both demos to GitHub Pages:
+#   /        → main (Oakland data centers)
+#   /sfusd/  → sfusd-demo (SFUSD classroom technology)
+name: Deploy demos to Pages
+
+on:
+  push:
+    branches: [main, sfusd-demo]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+      - uses: actions/checkout@v4
+        with:
+          ref: sfusd-demo
+          path: sfusd
+      - name: Assemble site
+        run: |
+          mkdir -p _site/sfusd
+          cp main/index.html main/polis-math.js _site/
+          cp sfusd/index.html sfusd/polis-math.js _site/sfusd/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
