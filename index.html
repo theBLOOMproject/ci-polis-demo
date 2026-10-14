@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data centers in Oakland</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f1f2f6; --surface:#fff; --ink:#1b2333; --ink-2:#4b5466; --ink-3:#7a8292;
+  --line:#e2e4ea; --line-2:#d3d6de; --accent:#2a4aa8; --accent-soft:#e6eaf7;
+  --agree:#3d8a4f; --disagree:#c2483b; --divisive:#c68a1d; --banner:#f6eedb; --banner-ink:#5d4a1c;
+  --g0:#2a4aa8; --g1:#9a4fbf; --g2:#1f8a8a; --g3:#c0587e; --g4:#7a6a2a;
+  --mono:"IBM Plex Mono",ui-monospace,monospace; --sans:"Schibsted Grotesk",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0;text-align:inherit}
+textarea{font:inherit}
+main{max-width:532px;margin:0 auto;padding:30px 16px 120px}
+.banner{background:var(--banner);color:var(--banner-ink);border-radius:12px;padding:10px 12px;font-size:12.5px;margin-bottom:22px}
+.banner b{color:#3b2f10}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-size:33px;line-height:1.1;letter-spacing:-.02em;margin:6px 0 10px;font-weight:700}
+.prompt{font-size:16px;font-weight:500;margin:0 0 12px;max-width:470px}
+details.context{border:1px solid var(--line-2);border-radius:10px;background:var(--surface);padding:0 12px;margin-bottom:18px}
+details.context summary{cursor:pointer;padding:9px 0;font-weight:600;font-size:13px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.context summary::-webkit-details-marker{display:none}
+details.context summary svg{transition:transform .2s;color:var(--ink-2)}
+details.context[open] summary svg{transform:rotate(180deg)}
+details.context ul{margin:0 0 8px;padding-left:18px;font-size:13px;color:var(--ink-2)}
+details.context li{margin-bottom:4px}
+.note{font-size:11px;color:var(--ink-3);margin:0 0 10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:16px}
+.stat{padding:0 16px;border-left:1px solid var(--line-2);text-align:left}
+.stat:first-child{padding-left:0;border-left:0}
+.stat .n{display:flex;align-items:center;gap:7px;font-weight:700;font-size:16px}
+.stat .n svg{color:var(--accent)}
+.stat .l{font-size:12px;color:var(--ink-3)}
+button.stat .l{text-decoration:underline dotted;text-underline-offset:3px}
+.lede{color:var(--ink-2);font-size:13.5px;max-width:400px;margin:0 0 22px}
+.btn-primary{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;background:var(--ink);color:#fff;border-radius:10px;height:40px;font-weight:600;font-size:14px}
+.btn-primary:hover{background:#2a3448}
+.btn-primary:disabled{opacity:.4;cursor:default}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:30px 0 10px}
+.link{color:var(--accent);font-weight:600;font-size:13px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-3);margin:-2px 0 10px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.qlist{border-top:1px solid var(--line-2)}
+.qrow{display:flex;align-items:center;width:100%;text-align:left;padding:16px 3px;border-bottom:1px solid var(--line-2);gap:12px}
+.qrow:hover .qt{color:var(--accent)}
+.qrow .qt{font-size:17px;font-weight:500;margin-bottom:5px}
+.qrow .meta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
+.icons{display:inline-flex;gap:3px;margin-right:2px}
+.qrow .chev{margin-left:auto;color:var(--ink-3);flex:none}
+.open-tag{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:4px}
+.proposed{margin-top:24px;border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
+.proposed-head{display:flex;justify-content:space-between;align-items:center;width:100%;padding:12px 3px}
+.proposed-head svg{transition:transform .2s;color:var(--ink-2)}
+.proposed.open .proposed-head svg{transform:rotate(180deg)}
+.pq{padding:14px 3px;border-top:1px solid var(--line)}
+.pq-t{font-weight:600;font-size:13.5px;margin-bottom:8px}
+.pq-groups{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.pq-g{width:115px}
+.pq-g .row{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-2)}
+.pq-g .row b{font-size:10.5px}
+.minibar{position:relative;height:3px;border-radius:2px;background:var(--disagree);overflow:visible;margin-top:2px}
+.minibar i{position:absolute;left:0;top:0;bottom:0;background:var(--agree);border-radius:2px}
+.minibar .tick{position:absolute;top:-3px;width:1px;height:9px;background:var(--ink-2)}
+.minibar.empty{background:var(--line)}
+.pq-foot{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-3)}
+.pq-foot .sp{flex:1}
+.chip{border:1px solid var(--line-2);border-radius:999px;padding:4px 10px;font-size:11.5px;color:var(--ink);background:var(--surface);white-space:nowrap}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.footer{display:flex;gap:14px;margin-top:22px;font-size:12px;color:var(--ink-2);flex-wrap:wrap}
+.footer button:hover{color:var(--ink)}
+.fab{position:fixed;right:16px;bottom:16px;width:46px;height:46px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;box-shadow:0 6px 18px rgba(20,25,40,.25);z-index:30}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:60;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.gdot{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none}
+.card{background:var(--surface);border:1px solid var(--line-2);border-radius:14px;padding:14px}
+.card-intro{font-size:12.5px;color:var(--ink-2);margin:0 0 10px}
+
+/* info requests */
+.req{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}
+.req .t{flex:1;font-size:13px}
+.req .m{font-size:11px;color:var(--ink-3);margin-top:2px}
+
+/* opinion groups */
+.map{display:block;width:100%;height:auto;margin-bottom:10px}
+.map .pt{cursor:pointer}
+.gchips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.gchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);border-radius:999px;padding:4px 10px 4px 8px;font-size:12px}
+.gchip.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.gchip .ct{color:var(--ink-3)}
+.subhead{font-size:12.5px;font-weight:600;margin:4px 0 6px}
+.rep{display:grid;grid-template-columns:86px 1fr;gap:2px 10px;padding:8px 0;border-top:1px solid var(--line);font-size:12.5px}
+.rep .dir{font-weight:600;font-size:11.5px}
+.rep .dir.agree{color:var(--agree)} .rep .dir.disagree{color:var(--disagree)}
+.rep .vs{grid-column:2;font-size:11px;color:var(--ink-3)}
+.method{font-size:11px;color:var(--ink-3);margin:12px 0 0;line-height:1.5}
+.empty-note{font-size:12.5px;color:var(--ink-3);padding:4px 0 8px}
+
+/* sheet */
+.scrim{display:none;position:fixed;inset:0;background:rgba(40,44,56,.45);opacity:0;transition:opacity .25s;z-index:40}
+.scrim.show{opacity:1}
+.sheet{position:fixed;left:50%;bottom:0;width:min(624px,100%);max-height:calc(100% - 22px);transform:translate(-50%,100%);background:var(--surface);border-radius:20px 20px 0 0;z-index:50;display:flex;flex-direction:column;box-shadow:0 -6px 30px rgba(0,0,0,.12);visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}
+.sheet.show{transform:translate(-50%,0);visibility:visible;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.sheet-top{position:relative;padding:22px 12px 6px;flex:none}
+.sheet-top .handle{position:absolute;top:6px;left:50%;width:32px;height:3px;margin-left:-16px;border-radius:2px;background:var(--line-2)}
+.close{position:absolute;right:12px;top:14px;width:28px;height:28px;border-radius:50%;background:var(--bg);display:grid;place-items:center}
+.close:hover{background:var(--line)}
+.sheet-body{overflow-y:auto;padding:8px 46px 40px}
+.sheet h2{font-size:25px;line-height:1.2;letter-spacing:-.015em;margin:0 0 10px;max-width:420px;font-weight:700}
+.sub{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);margin-bottom:22px}
+.sub .av{width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.sub abbr{text-decoration:underline dotted;text-underline-offset:2px;cursor:help}
+.vote-card{border:1px solid var(--line-2);border-radius:14px;padding:16px 14px 14px;box-shadow:0 2px 8px rgba(20,25,40,.05);margin-bottom:34px}
+.vote-card .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.vote-card .reply{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.vote-card > p:not(.hint){font-size:16.5px;line-height:1.35;margin:0 0 12px;min-height:44px}
+.vote-card > p.quoted{font-size:14px;color:var(--ink-2);min-height:0;border-left:3px solid var(--line-2);padding-left:10px}
+.vote-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.vote-btns button{border:1px solid var(--line-2);border-radius:8px;height:36px;font-weight:600;font-size:12.5px;text-align:center}
+.vote-btns .a{color:var(--agree)} .vote-btns .a:hover{background:#eef6f0;border-color:var(--agree)}
+.vote-btns .d{color:var(--disagree)} .vote-btns .d:hover{background:#fbeeec;border-color:var(--disagree)}
+.vote-btns .p{color:var(--ink-2)} .vote-btns .p:hover{background:var(--bg)}
+.vote-btns .i{color:var(--accent)} .vote-btns .i:hover{background:var(--accent-soft);border-color:var(--accent)}
+.done{text-align:center;padding:10px 0}
+.done > p{min-height:0;font-size:15px;color:var(--ink-2)}
+.done .btn-primary{width:auto;display:inline-flex;padding:0 16px}
+.you-group{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--ink-2);margin-top:10px}
+.progress{height:3px;border-radius:2px;background:var(--line);width:120px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent)}
+.stack{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--line);margin:8px 0 5px}
+.stack i{display:block;height:100%}
+.stack .a{background:var(--agree)} .stack .d{background:var(--disagree)} .stack .p{background:var(--line-2)}
+.stack.sm{height:4px;margin:5px 0 3px}
+.stack-legend{font-size:11.5px;color:var(--ink-2)}
+.rv-groups{display:grid;gap:5px;margin:12px 0 2px}
+.rv-g{display:grid;grid-template-columns:78px 1fr 64px;align-items:center;gap:8px;font-size:11px;color:var(--ink-2)}
+.rv-g span:first-child{display:inline-flex;align-items:center;gap:5px}
+.rv-g .bar{margin-top:0}
+.infonote{font-size:11.5px;color:var(--accent);margin-top:10px}
+.card-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.btn-sm{height:34px;padding:0 14px;border-radius:8px;font-weight:600;font-size:13px}
+.btn-sm.dark{background:var(--ink);color:#fff}
+.btn-sm.dark:disabled{opacity:.4;cursor:default}
+.btn-sm.ghost{color:var(--ink-2)} .btn-sm.ghost:hover{background:var(--bg)}
+.reflect h4{font-size:18px;font-weight:600;margin:8px 0 4px;line-height:1.3}
+h3{font-size:17px;margin:0 0 8px;font-weight:600}
+.learned{border:1px solid var(--line-2);border-radius:10px;margin-bottom:22px;overflow:hidden}
+.learned button{display:flex;align-items:flex-start;gap:9px;padding:9px 12px;font-size:12.5px;border-top:1px solid var(--line);width:100%}
+.learned button:first-child{border-top:0}
+.learned button:hover{background:var(--bg)}
+.learned span.t{flex:1}
+.learned span.p{font-size:10.5px;color:var(--ink-2);padding-top:2px}
+.claim{padding:4px 0 0;margin-bottom:22px;border-bottom:1px solid var(--line)}
+.claim .st{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:600;margin-bottom:8px}
+.claim h4{font-size:17px;font-weight:500;line-height:1.3;margin:0 0 9px;max-width:440px}
+.gbars{display:grid;gap:12px;margin-bottom:10px}
+.gbar .row{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--ink-2)}
+.gbar .row span{display:inline-flex;align-items:center;gap:5px}
+.gbar .row b{color:var(--ink)}
+.bar{height:4px;border-radius:2px;background:var(--disagree);margin-top:3px;position:relative;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--agree);transition:width .4s}
+.ticker{display:flex;gap:8px;font-size:11px;color:var(--ink-2);padding-bottom:4px;align-items:baseline}
+.ticker .n{font-family:var(--mono);color:var(--ink-3);flex:none}
+.ticker .bar-sep{color:var(--line-2)}
+.ticker .txt{animation:fade .4s}
+@keyframes fade{from{opacity:.2;transform:translateY(3px)}to{opacity:1;transform:none}}
+.expand{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--accent);font-weight:600;margin:2px 0 10px}
+.expand svg{transition:transform .2s}
+.expand.on svg{transform:rotate(180deg)}
+.stmts{margin-bottom:10px}
+.stmt{padding:8px 0;border-top:1px solid var(--line)}
+.stmt-t{font-size:12.5px}
+.stance{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.04em;padding:1px 5px;border-radius:4px;margin-right:6px;white-space:nowrap}
+.stance.sup{background:#e8f3eb;color:var(--agree)} .stance.opp{background:#f6e7e5;color:var(--disagree)}
+.stmt-meta{font-size:10.5px;color:var(--ink-3)}
+.claim.unclaimed{border-bottom:0}
+.claim.unclaimed .st{color:var(--ink-3)}
+.claim.flash{animation:flash 1.2s}
+@keyframes flash{0%{background:var(--accent-soft)}100%{background:transparent}}
+.mine{font-family:var(--mono);font-size:9.5px;background:var(--accent-soft);color:var(--accent);padding:1px 5px;border-radius:4px;margin-left:4px}
+
+/* share flow */
+.steps{display:grid;gap:6px;margin:12px 0 14px}
+.steps i{height:3px;border-radius:2px;background:var(--line)}
+.steps i.on{background:var(--accent)}
+.field-label{font-weight:600;font-size:13px;margin:16px 0 4px}
+.hint{font-size:12px;color:var(--ink-3);margin:0 0 8px}
+textarea.in{width:100%;min-height:110px;border:1px solid var(--line-2);border-radius:10px;padding:10px 12px;resize:vertical;font-size:15px;color:var(--ink)}
+textarea.in.small{min-height:70px;font-size:14px}
+textarea.in:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.count{text-align:right;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:4px}
+.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.actions .ghost{padding:0 14px;height:38px;border-radius:9px;color:var(--ink-2);font-weight:600;font-size:13.5px}
+.actions .ghost:hover{background:var(--bg)}
+.actions .btn-primary{width:auto;padding:0 18px}
+.yr{font-size:13.5px;padding:8px 10px;background:var(--bg);border-radius:8px;margin-bottom:6px}
+.thanks-list{margin:14px 0 18px}
+.thanks-list div{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:7px 0;border-top:1px solid var(--line)}
+.thanks-list span:last-child{color:var(--ink-3);white-space:nowrap}
+@media (max-width:560px){
+  .sheet-body{padding:8px 18px 36px}
+  .stat{padding:0 8px}
+  h1{font-size:28px}
+  .stats .l{font-size:11px}
+  .vote-btns{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<button class="fab" id="fab" aria-label="Share your thoughts"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="sheet-top"><div class="handle"></div><div class="eyebrow" id="sheet-label"></div>
+    <button class="close" id="sheet-close" aria-label="Close"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="sheet-body" id="sheet-body"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="polis-math.js"></script>
+<script>
+// ---------- Seed content ----------
+// Synthetic participants belong to a hidden "latent" camp (A or B) that drives how they vote.
+// The opinion groups shown in the UI are NOT these camps: they're discovered from the votes by
+// polis-math.js, exactly as Polis would. Claim `p` is each camp's chance of agreeing with the claim;
+// a response's stance is +1 if it supports its claim, -1 if it argues against it.
+// Questions without claims are open questions: their responses carry their own `p`.
+const SEED = {
+  location: "Oakland, CA · Demo conversation",
+  title: "Data centers in Oakland",
+  prompt: "A developer has proposed a large data center in downtown Oakland. Should the city approve it, and on what terms?",
+  background: [
+    "The facility would sit on a downtown site near West Oakland and draw substantial power from PG&E's local grid.",
+    "Large data centers can use significant water for cooling, depending on the cooling design.",
+    "The city would gain new tax revenue; the developer is reported to be seeking incentives.",
+    "Approval would go through the Planning Commission and City Council, with a public comment period.",
+  ],
+  questions: [
+    { id: "q0", text: "What do you think everyone should know about this?", claims: [],
+      unclaimed: [["West Oakland already carries more than its share of the region's pollution.", { A: .9, B: .55 }],
+                  ["This decision will shape what kinds of industry Oakland attracts for decades.", { A: .75, B: .8 }],
+                  ["Most people I talk to haven't heard about this project at all.", { A: .7, B: .6 }]] },
+    { id: "q1", text: "Are the benefits of a data center in Oakland worth the risks?",
+      claims: [
+        { id: "c1", text: "The project's water and power demands would put too much strain on West Oakland.", p: { A: .9, B: .64 },
+          responses: [["Backup diesel generators would add air pollution to neighborhoods that already have high asthma rates.", 1],
+                      ["The environmental cost is overstated; new facilities use closed-loop cooling.", -1],
+                      ["Cooling a large data center would use water Oakland can't spare in drought years.", 1],
+                      ["PG&E's grid in West Oakland is already close to capacity.", 1]] },
+        { id: "c2", text: "Tax revenue from the project would meaningfully help Oakland's budget.", p: { A: .46, B: .8 },
+          responses: [["Oakland's budget deficit is serious enough that new tax revenue matters.", 1],
+                      ["Tax breaks offered to land the project would cancel out the revenue.", -1],
+                      ["Revenue should be earmarked for the neighborhoods that host the facility.", 1]] },
+        { id: "c3", text: "The project would bring few lasting jobs for Oakland residents.", p: { A: .86, B: .18 },
+          responses: [["Union construction jobs alone make this worth doing.", -1],
+                      ["Local hiring promises are rarely enforced after approval.", 1],
+                      ["Once it's built, a data center runs with a few dozen staff.", 1]] },
+      ],
+      unclaimed: [["I'd want to see how a comparable project played out somewhere else before deciding.", { A: .7, B: .66 }],
+                  ["It's not clear enough right now. We haven't gotten the information we need from the powers that be. We need to study this, with PGE and the developer providing more good information.", { A: .74, B: .52 }],
+                  ["The developer should hold public meetings in West Oakland before any vote.", { A: .88, B: .6 }]] },
+    { id: "q2", text: "Should Oakland be investing in AI at all?",
+      claims: [
+        { id: "c4", text: "AI tools could make city services faster and easier to use.", p: { A: .7, B: .82 },
+          responses: [["Permit wait times are a real problem that better software could fix.", 1],
+                      ["Chatbots for city services mostly frustrate residents.", -1],
+                      ["Translation tools could help non-English speakers reach the city.", 1]] },
+        { id: "c5", text: "Oakland should offer large subsidies to attract AI companies.", p: { A: .14, B: .32 },
+          responses: [["Other Bay Area cities are competing for these firms; we have to compete too.", 1],
+                      ["Public money should go to housing before tech incentives.", -1]] },
+        { id: "c6", text: "AI will cost more Oakland jobs than it creates.", p: { A: .8, B: .3 },
+          responses: [["Call-center and clerical jobs here are already being automated.", 1],
+                      ["Every new technology has created more jobs than it destroyed.", -1]] },
+        { id: "c7", text: "The city should build its own AI expertise rather than rely on vendors.", p: { A: .38, B: .76 },
+          responses: [["Vendor lock-in has burned the city on software before.", 1],
+                      ["The city can't compete with tech salaries to hire that talent.", -1]] },
+      ],
+      unclaimed: [["Peralta and Laney should get funding for AI training programs.", { A: .7, B: .78 }]] },
+    { id: "q3", text: "Who should have a say in siting decisions like this?",
+      claims: [
+        { id: "c8", text: "Residents within a mile should have veto power over siting.", p: { A: .84, B: .28 },
+          responses: [["The people who breathe the air should decide.", 1],
+                      ["A veto lets a few blocks block projects the whole city needs.", -1]] },
+        { id: "c9", text: "The Port and City Council are best placed to decide.", p: { A: .24, B: .7 },
+          responses: [["That's what we elect the Council to do.", 1],
+                      ["The Port has never been accountable to West Oakland.", -1]] },
+        { id: "c10", text: "State energy regulators should have the final say on grid impacts.", p: { A: .4, B: .66 },
+          responses: [["Grid capacity is a regional question, not a neighborhood one.", 1],
+                      ["Sacramento doesn't know what's happening on the ground here.", -1]] },
+      ],
+      unclaimed: [["Youth should get a formal voice, since they'll live with this longest.", { A: .72, B: .5 }],
+                  ["Tribal nations with ties to this land should be consulted.", { A: .76, B: .55 }]] },
+    { id: "q4", text: "What should be done?", claims: [],
+      unclaimed: [["Pause approval until an independent environmental review is finished.", { A: .88, B: .35 }],
+                  ["Approve it, but only with a binding community benefits agreement.", { A: .55, B: .82 }],
+                  ["Hold a series of public meetings in West Oakland before any vote.", { A: .86, B: .62 }]] },
+    { id: "q5", text: "What are we not talking about?", claims: [],
+      unclaimed: [["Who actually profits from this: Oakland, or out-of-state investors?", { A: .8, B: .5 }],
+                  ["How AI growth will change electricity prices for ordinary households.", { A: .78, B: .66 }],
+                  ["What the site could be used for instead.", { A: .64, B: .42 }]] },
+  ],
+  proposed: [
+    { text: "Should any approval require a binding community benefits agreement?", p: { A: .9, B: .66 } },
+    { text: "Is this really about the data center, or about how the Port uses its land?", p: { A: .46, B: .38 } },
+  ],
+  // Things participants have said they need to know. `base` stands in for earlier requesters.
+  requests: [
+    { qid: "q1", text: "How much water would the facility use for cooling, and where would it come from?", base: 14 },
+    { qid: "q1", text: "What has PG&E said about grid capacity in West Oakland?", base: 11 },
+    { qid: "q1", text: "What tax breaks, if any, has the developer asked for?", base: 9 },
+    { qid: "q1", text: "How many permanent local jobs have comparable data centers created?", base: 7 },
+    { qid: "q3", text: "Who has formal authority over this siting decision?", base: 6 },
+  ],
+};
+const REFLECT_PROMPTS = [
+  "What's coming up for you as you read these responses?",
+  "What seems most important about handling this well as a community?",
+  "Has anything here shifted how you see the issue?",
+];
+const SEED_PARTICIPANTS = 124;
+const PROMOTE_AT = 0.7;     // a proposed question joins the conversation once every group rates it ≥70% "good"
+const PROMOTE_MIN_N = 3;    // ...with at least this many raters per group
+const FIRST_REFLECT = 8;    // first reflection pause after this many of your votes
+const REFLECT_EVERY = 12;   // then every this many votes
+const STORE_KEY = "ci-polis-demo-v3";
+const ME = "me";
+
+// ---------- PRNG ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+// ---------- State ----------
+function freshState(){
+  const s = { seed: 7, nextP: 0, participants: {}, questions: [], claims: {}, responses: {}, votes: {}, info: {}, mine: {},
+              proposed: [], requests: [], reflections: [], nextReflect: FIRST_REFLECT, reflectN: 0 };
+  const addResponse = r => { const id = "r" + Object.keys(s.responses).length; s.responses[id] = { id, ...r }; };
+  for (const q of SEED.questions) {
+    for (const c of q.claims) {
+      s.claims[c.id] = { id: c.id, qid: q.id, text: c.text, p: c.p };
+      for (const [text, stance] of c.responses) addResponse({ qid: q.id, text, claim: c.id, stance });
+    }
+    for (const [text, p] of q.unclaimed) addResponse({ qid: q.id, text, claim: null, p });
+    s.questions.push({ id: q.id, text: q.text, claims: q.claims.map(c => c.id) });
+  }
+  for (const id in s.responses) { s.votes[id] = {}; s.info[id] = {}; }
+  s.proposed = SEED.proposed.map((p, i) => ({ id: "pq" + i, text: p.text, p: p.p, votes: {} }));
+  s.requests = SEED.requests.map((r, i) => ({ id: "ir" + i, qid: r.qid, rid: null, text: r.text, base: r.base, votes: {} }));
+  const rng = mulberry32(s.seed);
+  for (let i = 0; i < SEED_PARTICIPANTS; i++) addParticipant(s, rng);
+  return s;
+}
+
+function agreeProb(s, r, latent, lean) {
+  if (r.claim) { const base = s.claims[r.claim].p[latent] + lean; return r.stance > 0 ? base : 1 - base; }
+  return (r.p ? r.p[latent] : .55) + lean;
+}
+
+function addParticipant(s, rng) {
+  const id = "p" + (s.nextP++);
+  const latent = rng() < .58 ? "A" : "B";
+  s.participants[id] = { latent };
+  const lean = (rng() - .5) * .16;
+  for (const q of s.questions) {
+    if (rng() > .93) continue; // skips this question entirely
+    for (const r of Object.values(s.responses)) {
+      if (r.qid !== q.id || rng() > .5) continue;
+      if (rng() < .1) {
+        s.votes[r.id][id] = 0;                       // passes count as 0 in the Polis matrix...
+        if (rng() < .45) s.info[r.id][id] = true;    // ...and some of them are "need more info"
+      } else {
+        s.votes[r.id][id] = rng() < Math.min(.97, Math.max(.03, agreeProb(s, r, latent, lean))) ? 1 : -1;
+      }
+    }
+  }
+  for (const p of s.proposed) if (p.p && rng() < .15) p.votes[id] = rng() < p.p[latent] ? 1 : -1;
+  for (const r of s.requests) if (rng() < .04) r.votes[id] = 1;
+}
+
+let state;
+function load(){ try { const raw = localStorage.getItem(STORE_KEY); if (raw) return JSON.parse(raw); } catch (e) {} return freshState(); }
+function save(){ mathRev++; try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+
+// ---------- Polis math (memoised; recomputed after every change) ----------
+let mathRev = 0, mathCacheRev = -1, mathCache = null, mathMemo = null;
+function getMath(){
+  if (mathCacheRev === mathRev) return mathCache;
+  const participants = Object.keys(state.participants);
+  if (Object.keys(state.mine).length) participants.push(ME);
+  mathCache = PolisMath.compute({
+    participants,
+    comments: Object.keys(state.responses),
+    vote: (pid, rid) => pid === ME ? state.mine[rid] : state.votes[rid][pid],
+    prev: mathMemo,
+  });
+  if (mathCache.memo) mathMemo = mathCache.memo;
+  mathCacheRev = mathRev;
+  return mathCache;
+}
+const GL = i => String.fromCharCode(65 + i);
+const gColor = i => `var(--g${i % 5})`;
+
+state = load();
+
+// ---------- Derived ----------
+function voteEntries(rid){ const v = Object.entries(state.votes[rid]); if (state.mine[rid] !== undefined) v.push([ME, state.mine[rid]]); return v; }
+const infoCount = rid => Object.keys(state.info[rid] || {}).length;
+const reqCount = r => r.base + Object.keys(r.votes).length;
+const isOpen = q => !q.claims.length;
+
+// A claim pools the votes on its responses (flipping responses that argue against it),
+// then reads the per-group support from Polis's groups.
+function claimStats(cid){
+  const M = getMath(), G = M.groups.length;
+  const per = Array.from({ length: G }, () => [0, 0]), all = [0, 0];
+  for (const r of Object.values(state.responses)) if (r.claim === cid)
+    for (const [pid, v] of voteEntries(r.id)) {
+      if (v === 0) continue;
+      const sup = (v === 1) === (r.stance > 0) ? 1 : 0;
+      const g = M.groupOf[pid];
+      if (g !== undefined) { per[g][0] += sup; per[g][1]++; }
+      all[0] += sup; all[1]++;
+    }
+  // Same +1/+2 smoothing Polis uses for its per-group agree estimates.
+  const smooth = ([s, n]) => (s + 1) / (n + 2);
+  const rates = G ? per.map(smooth) : [smooth(all)];
+  const status = rates.every(x => x >= .6) ? "agree" : rates.every(x => x <= .4) ? "disagree" : "divisive";
+  return { groups: per.map(([s, n]) => n ? s / n : 0), all: all[1] ? all[0] / all[1] : 0, status };
+}
+
+function responseStats(rid){
+  const M = getMath();
+  let a = 0, d = 0, p = 0;
+  const g = M.groups.map(() => [0, 0]);
+  for (const [pid, v] of voteEntries(rid)) {
+    if (v === 1) a++; else if (v === -1) d++; else p++;
+    const gi = M.groupOf[pid];
+    if (gi !== undefined && v !== 0) { g[gi][1]++; if (v === 1) g[gi][0]++; }
+  }
+  const n = a + d + p;
+  return { a, d, p, n, groups: g.map(([s, k]) => k ? s / k : null), info: infoCount(rid) };
+}
+
+function questionStats(qid){
+  const voters = new Set(); let responses = 0;
+  for (const r of Object.values(state.responses)) if (r.qid === qid) { responses++; for (const [pid] of voteEntries(r.id)) voters.add(pid); }
+  return { voters: voters.size, responses };
+}
+
+function totals(){
+  let votes = 0; const voters = new Set(Object.keys(state.participants));
+  for (const rid in state.votes) votes += Object.keys(state.votes[rid]).length;
+  votes += Object.keys(state.mine).length; if (Object.keys(state.mine).length) voters.add(ME);
+  return { participants: voters.size, responses: Object.keys(state.responses).length, votes, groups: getMath().groups.length };
+}
+
+function proposedStats(p){
+  const M = getMath();
+  const tally = M.groups.map(() => [0, 0]);
+  for (const [pid, v] of Object.entries(p.votes)) { const g = M.groupOf[pid]; if (g !== undefined) { tally[g][1]++; if (v === 1) tally[g][0]++; } }
+  return tally;
+}
+
+// ---------- Rendering helpers ----------
+const esc = s => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pct = x => Math.round(x * 100) + "%";
+const plural = (n, w) => `${n} ${n === 1 ? w : w === "person" ? "people" : w + "s"}`;
+const STATUS_LABEL = { agree: "Most agree", disagree: "Most disagree", divisive: "Divisive" };
+const STATUS_HELP = { agree: "Every opinion group mostly agrees", disagree: "Every opinion group mostly disagrees", divisive: "Opinion groups split on this" };
+const STATUS_COLOR = { agree: "var(--agree)", disagree: "var(--disagree)", divisive: "var(--divisive)" };
+const tip = k => `<title>${STATUS_LABEL[k] ? `${STATUS_LABEL[k]}: ${STATUS_HELP[k]}` : "Not part of a claim yet"}</title>`;
+const ICON = {
+  agree: (s = 14) => `<svg width="${s}" height="${s}" viewBox="0 0 16 16">${tip("agree")}<circle cx="8" cy="8" r="8" fill="var(--agree)"/><path d="M4.6 8.3l2.2 2.1 4.6-4.7" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  disagree: (s = 14) => `<svg width="${s}" height="${s}" viewBox="0 0 16 16">${tip("disagree")}<circle cx="8" cy="8" r="8" fill="var(--disagree)"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  divisive: (s = 14) => `<svg width="${s}" height="${s}" viewBox="0 0 16 16">${tip("divisive")}<circle cx="8" cy="8" r="7" fill="none" stroke="var(--divisive)" stroke-width="1.6"/><path d="M8 1a7 7 0 0 0 0 14z" fill="var(--divisive)"/></svg>`,
+  unclaimed: (s = 14) => `<svg width="${s}" height="${s}" viewBox="0 0 16 16">${tip("unclaimed")}<circle cx="8" cy="8" r="7" fill="none" stroke="var(--ink-3)" stroke-width="1.3" stroke-dasharray="2 2"/></svg>`,
+  user: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>`,
+  msg: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>`,
+  check: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>`,
+  groups: `<svg width="14" height="13" viewBox="0 0 26 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="8" cy="8" r="3.5"/><circle cx="18" cy="8" r="3.5"/><path d="M2 20c.6-3.5 3-5 6-5s5.4 1.5 6 5M14 15.5c1-.4 2.4-.5 4-.5 3 0 5.4 1.5 6 5"/></svg>`,
+  chevDown: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>`,
+};
+const legend = () => `<div class="legend"><span>${ICON.agree(12)} Most agree</span><span>${ICON.disagree(12)} Most disagree</span><span>${ICON.divisive(12)} Divisive: groups split</span></div>`;
+const GROUPS_EXPLAINER = "People who vote alike are grouped together. Nobody picks a group: groups emerge from the votes, so you can see where the community splits and where it agrees.";
+
+// ---------- Home ----------
+let proposedOpen = false, selectedGroup = 0;
+function renderHome(){
+  const t = totals();
+  const fmt = n => n.toLocaleString();
+  document.getElementById("app").innerHTML = `
+    <div class="banner"><b>Demo: sample data.</b> About a hundred synthetic participants have already voted. Use “Simulate” below to add more, and “Reset demo” to start over. Nothing here touches real conversations.</div>
+    <div class="eyebrow">${esc(SEED.location)}</div>
+    <h1>${esc(SEED.title)}</h1>
+    <p class="prompt">${esc(SEED.prompt)}</p>
+    <details class="context"><summary>Background ${ICON.chevDown}</summary>
+      <ul>${SEED.background.map(b => `<li>${esc(b)}</li>`).join("")}</ul>
+      <p class="note">Sample background for this demo. Replace it with verified facts and sources before a pilot.</p>
+    </details>
+    <div class="stats">
+      <div class="stat"><div class="n">${ICON.user}${fmt(t.participants)}</div><div class="l">participants</div></div>
+      <div class="stat"><div class="n">${ICON.msg}${fmt(t.responses)}</div><div class="l">responses</div></div>
+      <div class="stat"><div class="n">${ICON.check}${fmt(t.votes)}</div><div class="l">votes</div></div>
+      <button class="stat" data-act="goto-groups" title="${GROUPS_EXPLAINER}"><div class="n">${ICON.groups}${t.groups}</div><div class="l">opinion groups</div></button>
+    </div>
+    <p class="lede">Pick a question to vote on responses and see where people agree, disagree, or split.</p>
+    <button class="btn-primary" data-act="share">${ICON.msg} Share your thoughts</button>
+    <div class="section-head"><span class="eyebrow">${state.questions.length} questions</span><button class="link" data-act="ask">Ask a question</button></div>
+    ${legend()}
+    <div class="qlist">${state.questions.map(q => {
+      const qs = questionStats(q.id);
+      const meta = isOpen(q)
+        ? `<span class="open-tag">Open question</span>${plural(qs.responses, "response")} · ${qs.voters} participants`
+        : `<span class="icons">${q.claims.map(c => ICON[claimStats(c).status]()).join("")}</span>${plural(q.claims.length, "claim")} · ${plural(qs.responses, "response")} · ${qs.voters} participants`;
+      return `<button class="qrow" data-q="${q.id}"><div><div class="qt">${esc(q.text)}</div><div class="meta">${meta}</div></div>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>`;
+    }).join("")}</div>
+    ${renderRequests()}
+    ${renderGroups()}
+    <div class="proposed ${proposedOpen ? "open" : ""}">
+      <button class="proposed-head" data-act="toggle-proposed"><span class="eyebrow">Proposed questions · ${state.proposed.length}</span>${ICON.chevDown}</button>
+      ${proposedOpen ? state.proposed.map(renderProposed).join("") : ""}
+    </div>
+    <div class="footer"><button data-act="simulate">Simulate 10 participants</button><button data-act="reset">Reset demo</button>
+      ${state.reflections.length ? `<button data-act="reflections">Your reflections (${state.reflections.length})</button>` : ""}</div>`;
+}
+
+// "Need more info" votes and the requests people write become a shared research list.
+function renderRequests(){
+  const reqs = [...state.requests].sort((a, b) => reqCount(b) - reqCount(a)).slice(0, 6);
+  const unsure = Object.values(state.responses).map(r => [r, infoCount(r.id)]).filter(([, n]) => n).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  const qShort = qid => { const q = state.questions.find(x => x.id === qid); return q ? q.text : ""; };
+  return `<div class="section-head"><span class="eyebrow">What we need to learn · ${state.requests.length}</span></div>
+    <div class="card">
+      <p class="card-intro">Things people say they need to know before they can decide. Pick one up and bring back a good source.</p>
+      ${reqs.map(r => `<div class="req"><div class="t">${esc(r.text)}${r.votes[ME] && r.by === ME ? '<span class="mine">YOU</span>' : ""}
+          <div class="m">${plural(reqCount(r), "person")} need${reqCount(r) === 1 ? "s" : ""} this · ${esc(qShort(r.qid))}</div></div>
+        <button class="chip ${r.votes[ME] ? "on" : ""}" data-req="${r.id}">${r.votes[ME] ? "✓ Me too" : "Me too"}</button></div>`).join("")}
+      ${unsure.length ? `<div class="subhead" style="margin-top:12px">Statements people feel least sure about</div>
+        ${unsure.map(([r, n]) => `<div class="req"><div class="t">${esc(r.text)}<div class="m">${plural(n, "person")} said they need more info</div></div></div>`).join("")}` : ""}
+    </div>`;
+}
+
+// The opinion map: each in-conversation participant's 2D PCA projection, coloured by k-means group.
+function renderMap(M){
+  const W = 500, H = 210, PAD = 14;
+  const ids = [...M.inConv].filter(pid => M.proj[pid]);
+  if (!ids.length) return "";
+  const xs = ids.map(p => M.proj[p][0]), ys = ids.map(p => M.proj[p][1]);
+  const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+  const sx = x => PAD + (Math.min(x1, Math.max(x0, x)) - x0) / ((x1 - x0) || 1) * (W - 2 * PAD);
+  const sy = y => PAD + (Math.min(y1, Math.max(y0, y)) - y0) / ((y1 - y0) || 1) * (H - 2 * PAD);
+  const dots = ids.filter(p => p !== ME).map(p => {
+    const g = M.groupOf[p];
+    return `<circle class="pt" data-group="${g}" cx="${sx(M.proj[p][0]).toFixed(1)}" cy="${sy(M.proj[p][1]).toFixed(1)}" r="3.4" fill="${gColor(g)}" fill-opacity="${g === selectedGroup ? .85 : .35}"/>`;
+  }).join("");
+  const labels = M.groups.map(g => {
+    const x = sx(g.centroid[0]), y = sy(g.centroid[1]);
+    return `<g data-group="${g.id}" class="pt"><rect x="${x - 10}" y="${y - 9}" width="20" height="18" rx="9" fill="${gColor(g.id)}"/><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">${GL(g.id)}</text></g>`;
+  }).join("");
+  let me = "";
+  if (M.proj[ME]) {
+    const x = sx(M.proj[ME][0]), y = sy(M.proj[ME][1]), placed = M.inConv.has(ME);
+    me = `<circle cx="${x}" cy="${y}" r="7" fill="none" stroke="var(--ink)" stroke-width="2" ${placed ? "" : 'stroke-dasharray="3 2"'}/><text x="${x + 10}" y="${y + 4}" font-size="11" font-weight="600" fill="var(--ink)">You</text>`;
+  }
+  return `<svg class="map" viewBox="0 0 ${W} ${H}" role="img" aria-label="Opinion map of participants"><rect x="0" y="0" width="${W}" height="${H}" rx="10" fill="var(--bg)"/>${dots}${labels}${me}</svg>`;
+}
+
+function renderGroups(){
+  const M = getMath();
+  const head = `<div class="section-head" id="groups"><span class="eyebrow">Opinion groups · ${M.groups.length}</span></div>`;
+  if (!M.groups.length) return head + `<div class="card"><p class="card-intro">${GROUPS_EXPLAINER}</p><div class="empty-note">Not enough votes yet to find opinion groups.</div></div>`;
+  if (selectedGroup >= M.groups.length) selectedGroup = 0;
+  const g = M.groups[selectedGroup];
+  const reps = M.repness[g.id].slice(0, 3);
+  const consensus = Object.entries(M.consensus)
+    .filter(([rid]) => M.counts[rid].every(c => c.ns >= 3))
+    .sort((a, b) => b[1].agree - a[1].agree).slice(0, 3);
+  return head + `<div class="card">
+    <p class="card-intro">${GROUPS_EXPLAINER}</p>
+    ${renderMap(M)}
+    <div class="gchips">${M.groups.map(x => `<button class="gchip ${x.id === selectedGroup ? "on" : ""}" data-group="${x.id}"><span class="gdot" style="background:${gColor(x.id)}"></span>Group ${GL(x.id)} <span class="ct">${x.members.length}</span></button>`).join("")}</div>
+    <div class="subhead">What sets Group ${GL(g.id)} apart</div>
+    ${reps.length ? reps.map(r => `<div class="rep"><span class="dir ${r.dir}">${pct(r.pIn)} ${r.dir === "agree" ? "agreed" : "disagreed"}</span><span>${esc(state.responses[r.tid].text)}</span><span class="vs">vs ${pct(r.pOut)} of everyone else</span></div>`).join("")
+      : `<div class="empty-note">Nothing sets this group apart with confidence yet.</div>`}
+    <div class="subhead" style="margin-top:14px">Common ground across all groups</div>
+    ${consensus.map(([rid]) => `<div class="rep"><span class="dir agree">${M.counts[rid].map((c, i) => `${GL(i)} ${pct(c.ns ? c.na / c.ns : 0)}`).join(" · ")}</span><span>${esc(state.responses[rid].text)}</span></div>`).join("")}
+    <p class="method">Groups are found the way Polis finds them: PCA of the vote matrix, then k-means with the number of groups (2–5) picked by silhouette score. Participants are placed after ${M.minVotes} votes.</p>
+  </div>`;
+}
+
+function renderProposed(p){
+  const M = getMath();
+  const tally = proposedStats(p);
+  const bar = (label, [good, n]) => { const x = n ? good / n : 0;
+    return `<div class="pq-g"><div class="row"><span>${label}</span><b style="color:${!n ? "var(--ink-3)" : x >= PROMOTE_AT ? "var(--agree)" : "var(--disagree)"}">${n ? pct(x) : "–"}</b></div>
+      <div class="minibar ${n ? "" : "empty"}"><i style="width:${x * 100}%"></i><span class="tick" style="left:${PROMOTE_AT * 100}%" title="Promotion threshold"></span></div></div>`; };
+  const n = Object.keys(p.votes).length, my = p.votes[ME];
+  return `<div class="pq"><div class="pq-t">${esc(p.text)}</div><div class="pq-groups">${M.groups.map(g => bar("Group " + GL(g.id), tally[g.id])).join("")}</div>
+    <div class="pq-foot">${plural(n, "vote")}<span class="sp"></span>
+      <button class="chip ${my === 1 ? "on" : ""}" data-pq="${p.id}" data-v="1">Good question</button>
+      <button class="chip ${my === -1 ? "on" : ""}" data-pq="${p.id}" data-v="-1">Not useful</button></div></div>`;
+}
+
+// ---------- Sheet ----------
+let sheetView = null, tickerTimer = null, tickerStep = 0;
+const sheet = document.getElementById("sheet"), scrim = document.getElementById("scrim"), body = document.getElementById("sheet-body");
+const questionView = qid => ({ type: "question", qid, stage: null, rid: null, expanded: {} });
+function openSheet(view){ sheetView = view; renderSheet(); scrim.style.display = "block"; requestAnimationFrame(() => { sheet.classList.add("show"); scrim.classList.add("show"); }); body.scrollTop = 0; }
+function switchSheet(view){ sheetView = view; renderSheet(); body.scrollTop = 0; }
+function closeSheet(){ sheetView = null; sheet.classList.remove("show"); scrim.classList.remove("show"); clearInterval(tickerTimer); setTimeout(() => { if (!sheetView) scrim.style.display = "none"; }, 300); renderHome(); }
+function renderSheet(){
+  clearInterval(tickerTimer);
+  if (!sheetView) return;
+  ({ question: () => renderQuestion(sheetView.qid), share: renderShare, thanks: renderThanks, ask: renderAsk, reflections: renderReflections })[sheetView.type]();
+}
+
+function myGroupNote(M){
+  const n = M.voteCount[ME] || 0;
+  if (M.groupOf[ME] !== undefined) {
+    const g = M.groupOf[ME];
+    return `<div class="you-group"><span class="gdot" style="background:${gColor(g)}"></span>Your votes place you in <b>Group ${GL(g)}</b>, with ${M.groups[g].members.length - 1} others.</div>`;
+  }
+  if (!n) return "";
+  return `<div class="you-group"><span class="progress"><i style="width:${n / M.minVotes * 100}%"></i></span>Vote on ${M.minVotes - n} more to join an opinion group</div>`;
+}
+
+function stackBar(s, cls = ""){
+  const w = x => s.n ? x / s.n * 100 : 0;
+  return `<div class="stack ${cls}"><i class="a" style="width:${w(s.a)}%"></i><i class="d" style="width:${w(s.d)}%"></i><i class="p" style="width:${w(s.p)}%"></i></div>`;
+}
+
+// The vote card has four stages: voting, "what would help you decide?", results, and a reflection pause.
+function renderVoteCard(qid, rs, M){
+  const v = sheetView;
+  if (v.stage === "info") {
+    const r = state.responses[v.rid];
+    return `<div class="vote-card"><div class="top"><span class="eyebrow">You need more info</span></div>
+      <p class="quoted">${esc(r.text)}</p>
+      <div class="field-label">What would help you decide? <span style="font-weight:400;color:var(--ink-3)">(optional)</span></div>
+      <p class="hint">Your request joins “What we need to learn”, where others can add a “me too” or bring back a source.</p>
+      <textarea class="in small" id="info-text" maxlength="200" placeholder="e.g. What does PG&E say about grid capacity here?"></textarea>
+      <div class="card-actions"><button class="btn-sm ghost" data-act="info-skip">Skip</button><button class="btn-sm dark" data-act="info-submit" id="info-submit" disabled>Add request</button></div></div>`;
+  }
+  if (v.stage === "reveal") {
+    const r = state.responses[v.rid], s = responseStats(r.id), my = state.mine[r.id];
+    const label = my === 1 ? "Agree" : my === -1 ? "Disagree" : state.info[r.id][ME] ? "Need more info" : "Unsure";
+    const col = my === 1 ? "var(--agree)" : my === -1 ? "var(--disagree)" : "var(--ink-2)";
+    return `<div class="vote-card"><div class="top"><span class="eyebrow">You voted · <b style="color:${col}">${label}</b></span></div>
+      <p class="quoted">${esc(r.text)}</p>
+      <div class="subhead">How others voted</div>
+      ${stackBar(s)}
+      <div class="stack-legend">${pct(s.n ? s.a / s.n : 0)} agree · ${pct(s.n ? s.d / s.n : 0)} disagree · ${pct(s.n ? s.p / s.n : 0)} unsure · ${plural(s.n, "vote")}</div>
+      ${M.groups.length ? `<div class="rv-groups">${M.groups.map(g => { const x = s.groups[g.id];
+        return `<div class="rv-g"><span><span class="gdot" style="background:${gColor(g.id)}"></span>Group ${GL(g.id)}</span><div class="bar"><i style="width:${(x ?? 0) * 100}%"></i></div><span>${x === null ? "–" : pct(x) + " agree"}</span></div>`; }).join("")}</div>` : ""}
+      ${s.info ? `<div class="infonote">${plural(s.info, "person")} said they need more info on this.</div>` : ""}
+      ${myGroupNote(M)}
+      <div class="card-actions"><button class="btn-sm dark" data-act="next">Next response →</button></div></div>`;
+  }
+  if (v.stage === "reflect") {
+    const prompt = REFLECT_PROMPTS[state.reflectN % REFLECT_PROMPTS.length];
+    return `<div class="vote-card reflect"><span class="eyebrow">Pause and reflect</span>
+      <h4>${esc(prompt)}</h4>
+      <p class="hint">This isn't voted on. Hosts read reflections to understand what's coming up for people.</p>
+      <textarea class="in small" id="reflect-text" maxlength="600" placeholder="Take a moment. Write as much or as little as you like."></textarea>
+      <div class="card-actions"><button class="btn-sm ghost" data-act="reflect-skip">Keep voting</button><button class="btn-sm dark" data-act="reflect-submit" id="reflect-submit" disabled>Save reflection</button></div></div>`;
+  }
+  const left = rs.filter(r => state.mine[r.id] === undefined && !r.mine);
+  const cur = left[0];
+  if (!cur) return `<div class="vote-card done"><p>${rs.length ? "You've voted on every response to this question." : "No responses yet. Be the first."}</p>
+      <button class="btn-primary" data-act="respond" data-qid="${qid}">${ICON.msg} Add your own response</button>${myGroupNote(M)}</div>`;
+  return `<div class="vote-card"><div class="top"><span class="eyebrow">Response · ${left.length} left</span>
+      <button class="reply" data-act="respond" data-qid="${qid}" title="Add your own response">${ICON.msg}</button></div>
+      <p>${esc(cur.text)}</p>
+      <div class="vote-btns">
+        <button class="a" data-vote="1" data-rid="${cur.id}">Agree</button>
+        <button class="d" data-vote="-1" data-rid="${cur.id}">Disagree</button>
+        <button class="p" data-vote="0" data-rid="${cur.id}" title="Not sure either way">Unsure</button>
+        <button class="i" data-vote="0" data-info="1" data-rid="${cur.id}" title="I'd need to know more to decide">Need info</button>
+      </div>
+      ${myGroupNote(M)}</div>`;
+}
+
+function stmtRow(r){
+  const s = responseStats(r.id), M = getMath();
+  const groups = M.groups.map(g => s.groups[g.id] === null ? "" : `${GL(g.id)} ${pct(s.groups[g.id])}`).filter(Boolean).join(" · ");
+  return `<div class="stmt"><div class="stmt-t">${r.claim ? `<span class="stance ${r.stance > 0 ? "sup" : "opp"}">${r.stance > 0 ? "Supports" : "Pushes back"}</span>` : ""}${esc(r.text)}${r.mine ? '<span class="mine">YOU</span>' : ""}</div>
+    ${stackBar(s, "sm")}
+    <div class="stmt-meta">${pct(s.n ? s.a / s.n : 0)} agree · ${pct(s.n ? s.d / s.n : 0)} disagree · ${plural(s.n, "vote")}${groups ? ` · agree by group: ${groups}` : ""}${s.info ? ` · ${s.info} need info` : ""}</div></div>`;
+}
+
+function renderQuestion(qid){
+  const q = state.questions.find(x => x.id === qid);
+  const M = getMath(), G = M.groups.length, v = sheetView;
+  document.getElementById("sheet-label").textContent = isOpen(q) ? "Open question" : "Question";
+  const qs = questionStats(qid);
+  const rs = Object.values(state.responses).filter(r => r.qid === qid);
+  const claims = q.claims.map(cid => ({ c: state.claims[cid], s: claimStats(cid), rs: rs.filter(r => r.claim === cid) }));
+  const unclaimed = rs.filter(r => !r.claim);
+
+  const ticker = rs => { if (!rs.length) return ""; const i = tickerStep % rs.length; const r = rs[i];
+    return `<div class="ticker"><span class="n">${i + 1}/${rs.length}</span><span class="bar-sep">|</span><span class="txt">${esc(r.text)}${r.mine ? '<span class="mine">YOU</span>' : ""}</span></div>`; };
+  const expander = (key, list) => {
+    const on = v.expanded[key];
+    return `<div class="tk">${on ? "" : ticker(list)}</div>
+      <button class="expand ${on ? "on" : ""}" data-act="expand" data-key="${key}">${on ? "Hide statements" : `See all ${plural(list.length, "statement")}`} ${ICON.chevDown}</button>
+      ${on ? `<div class="stmts">${list.map(stmtRow).join("")}</div>` : ""}`;
+  };
+
+  body.innerHTML = `
+    <h2>${esc(q.text)}</h2>
+    <div class="sub"><span class="av">${ICON.user}</span><span><b>${qs.voters}</b> participants on this question · <abbr title="${GROUPS_EXPLAINER}">${plural(G, "opinion group")}</abbr> across the conversation</span></div>
+    ${renderVoteCard(qid, rs, M)}
+    ${claims.length ? `<h3>What we've learned</h3>
+    ${legend()}
+    <div class="learned">${claims.map(({ c, s }) => `<button data-act="goto-claim" data-key="${c.id}">${ICON[s.status](16)}<span class="t">${esc(c.text)}</span><span class="p" title="share of voters who agree">${pct(s.all)}</span></button>`).join("")}</div>` : ""}
+    ${claims.map(({ c, s, rs }) => `
+      <div class="claim" data-key="${c.id}"><div class="st" style="color:${STATUS_COLOR[s.status]}">${ICON[s.status](15)} ${STATUS_LABEL[s.status]}</div>
+        <h4>${esc(c.text)}</h4>
+        <div class="gbars" style="grid-template-columns:repeat(${Math.max(G, 1)},1fr)">${M.groups.map(g => `<div class="gbar"><div class="row"><span><span class="gdot" style="background:${gColor(g.id)}"></span>Group ${GL(g.id)}</span><b>${pct(s.groups[g.id])}</b></div><div class="bar"><i style="width:${s.groups[g.id] * 100}%"></i></div></div>`).join("")}</div>
+        ${expander(c.id, rs)}</div>`).join("")}
+    ${unclaimed.length ? `<div class="claim unclaimed" data-key="_u"><div class="st">${ICON.unclaimed(15)} ${isOpen(q) ? "Responses so far: not grouped into claims yet" : "Not part of a claim yet"}</div>${expander("_u", unclaimed)}</div>` : ""}`;
+
+  wireCounter("info-text", null, "info-submit");
+  wireCounter("reflect-text", null, "reflect-submit");
+
+  // Rotate the supporting responses under each collapsed claim
+  tickerTimer = setInterval(() => {
+    tickerStep++;
+    body.querySelectorAll(".claim[data-key]").forEach(el => {
+      const key = el.dataset.key;
+      if (v.expanded[key]) return;
+      el.querySelector(".tk").innerHTML = ticker(key === "_u" ? unclaimed : rs.filter(r => r.claim === key));
+    });
+  }, 3500);
+}
+
+// Share flow: walk every question, allow several responses per question, then thank and route into voting.
+function renderShare(){
+  const v = sheetView, q = state.questions[v.step], n = state.questions.length, last = v.step === n - 1;
+  const mineHere = v.added.filter(a => a.qid === q.id);
+  const skipLabel = v.single ? "Back to voting" : last ? (v.added.length ? "Finish" : "Close") : mineHere.length ? "Next question →" : "Skip";
+  document.getElementById("sheet-label").textContent = "Share your thoughts";
+  body.innerHTML = `
+    ${v.single ? "" : `<div class="steps" style="grid-template-columns:repeat(${n},1fr)">${state.questions.map((_, i) => `<i class="${i <= v.step ? "on" : ""}"></i>`).join("")}</div>
+    <div class="eyebrow" style="color:var(--accent)">Question ${v.step + 1} of ${n}${isOpen(q) ? " · open question" : ""}</div>`}
+    <h2 style="margin-top:6px">${esc(q.text)}</h2>
+    ${mineHere.length ? `<div class="field-label">Your responses</div>${mineHere.map(a => `<div class="yr">${esc(a.text)}</div>`).join("")}` : ""}
+    <div class="field-label">${mineHere.length ? "Add another" : "Your response"}</div>
+    ${mineHere.length ? "" : `<p class="hint">Others will agree, disagree, or pass. Once it has a few votes it's grouped with related responses into a claim. You can add more than one.</p>`}
+    <textarea class="in" id="share-text" maxlength="280" placeholder="Say it in a sentence or two"></textarea>
+    <div class="count" id="share-count">0/280</div>
+    <div class="actions"><button class="ghost" data-act="share-next">${skipLabel}</button><button class="btn-primary" data-act="share-add" id="share-submit" disabled>Add response</button></div>`;
+  wireCounter("share-text", "share-count", "share-submit");
+}
+
+function renderThanks(){
+  const added = sheetView.added;
+  const byQ = state.questions.filter(q => added.some(a => a.qid === q.id));
+  document.getElementById("sheet-label").textContent = "Share your thoughts";
+  body.innerHTML = `
+    <h2>Thanks, your ${added.length === 1 ? "response is" : "responses are"} in</h2>
+    <p class="hint" style="font-size:13.5px">Others will see ${added.length === 1 ? "it" : "them"} and vote. Once a response has a few votes, it's grouped with related ones into a claim.</p>
+    <div class="thanks-list">${byQ.map(q => `<div><span>${esc(q.text)}</span><span>${plural(added.filter(a => a.qid === q.id).length, "response")}</span></div>`).join("")}</div>
+    <p style="font-size:14px;margin:0 0 4px"><b>Now see what everyone else thinks.</b></p>
+    <div class="actions" style="justify-content:flex-start"><button class="btn-primary" data-act="goto-q" data-qid="${byQ[0].id}">Vote on “${esc(byQ[0].text)}” →</button></div>
+    <div class="actions" style="justify-content:flex-start;margin-top:6px"><button class="ghost" data-act="close">Back to overview</button></div>`;
+}
+
+function renderAsk(){
+  document.getElementById("sheet-label").textContent = "Ask a question";
+  body.innerHTML = `
+    <h2>Propose a new question</h2>
+    <p class="hint">Proposed questions are voted on by participants. Once every opinion group rates one a good question, it joins the conversation.</p>
+    <textarea class="in" id="ask-text" maxlength="200" placeholder="What should this conversation ask next?"></textarea>
+    <div class="count" id="ask-count">0/200</div>
+    <div class="actions"><button class="ghost" data-act="close">Cancel</button><button class="btn-primary" data-act="ask-submit" id="ask-submit" disabled>Propose</button></div>`;
+  wireCounter("ask-text", "ask-count", "ask-submit");
+}
+
+function renderReflections(){
+  document.getElementById("sheet-label").textContent = "Your reflections";
+  body.innerHTML = `<h2>Your reflections</h2>
+    <p class="hint">Hosts read these as context. They aren't voted on.</p>
+    ${state.reflections.map(r => `<div class="field-label">${esc(r.prompt)}</div><div class="yr">${esc(r.text)}</div>`).join("")}`;
+}
+
+function wireCounter(inputId, countId, btnId){
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  el.addEventListener("input", () => {
+    if (countId) document.getElementById(countId).textContent = `${el.value.length}/${el.maxLength}`;
+    document.getElementById(btnId).disabled = !el.value.trim();
+  });
+  el.focus({ preventScroll: true });
+  setTimeout(() => { if (document.activeElement !== el) el.focus({ preventScroll: true }); }, 320);
+}
+
+// ---------- Actions ----------
+function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2600); }
+
+function addMyResponse(qid, text){
+  const id = "r" + Date.now().toString(36) + Math.floor(Math.random() * 1e4);
+  // Synthetic participants who join later vote on your response with a neutral-ish lean.
+  state.responses[id] = { id, qid, text, claim: null, mine: true, p: { A: .55, B: .55 } };
+  state.votes[id] = {}; state.info[id] = {};
+  return id;
+}
+
+function simulate(){
+  const rng = mulberry32(Date.now() & 0xffffffff);
+  for (let i = 0; i < 10; i++) addParticipant(state, rng);
+  save();
+  promoteProposed();
+  renderHome(); if (sheetView?.type === "question") renderSheet();
+  toast("Added 10 synthetic participants");
+}
+
+function promoteProposed(){
+  const M = getMath();
+  if (!M.groups.length) return;
+  for (const p of [...state.proposed]) {
+    if (!proposedStats(p).every(([good, n]) => n >= PROMOTE_MIN_N && good / n >= PROMOTE_AT)) continue;
+    state.questions.push({ id: "q" + Date.now().toString(36) + p.id, text: p.text, claims: [] });
+    state.proposed = state.proposed.filter(x => x !== p);
+    toast("A proposed question was promoted");
+    save();
+  }
+}
+
+function shareAdd(){
+  const v = sheetView, el = document.getElementById("share-text"), text = el.value.trim();
+  if (!text) return false;
+  const qid = state.questions[v.step].id;
+  addMyResponse(qid, text); save();
+  v.added.push({ qid, text });
+  return true;
+}
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-act],[data-q],[data-vote],[data-pq],[data-group],[data-req]");
+  if (!el) return;
+  const v = sheetView;
+  if (el.dataset.q) return openSheet(questionView(el.dataset.q));
+  if (el.dataset.group !== undefined) { selectedGroup = Number(el.dataset.group); return renderHome(); }
+  if (el.dataset.vote !== undefined) {
+    const rid = el.dataset.rid;
+    state.mine[rid] = Number(el.dataset.vote);
+    if (el.dataset.info) state.info[rid][ME] = true; else delete state.info[rid][ME];
+    save();
+    v.rid = rid; v.stage = el.dataset.info ? "info" : "reveal";
+    return renderSheet();
+  }
+  if (el.dataset.pq) {
+    const p = state.proposed.find(x => x.id === el.dataset.pq), val = Number(el.dataset.v);
+    if (p.votes[ME] === val) delete p.votes[ME]; else p.votes[ME] = val;
+    save(); promoteProposed(); renderHome(); return;
+  }
+  if (el.dataset.req) {
+    const r = state.requests.find(x => x.id === el.dataset.req);
+    if (r.votes[ME]) delete r.votes[ME]; else r.votes[ME] = 1;
+    save(); renderHome(); return;
+  }
+  switch (el.dataset.act) {
+    case "share": return openSheet({ type: "share", step: 0, added: [] });
+    case "ask": return openSheet({ type: "ask" });
+    case "close": return closeSheet();
+    case "reflections": return openSheet({ type: "reflections" });
+    case "toggle-proposed": proposedOpen = !proposedOpen; return renderHome();
+    case "goto-groups": return document.getElementById("groups").scrollIntoView({ behavior: "smooth" });
+    case "simulate": return simulate();
+    case "reset":
+      if (!confirm("Reset the demo to its starting data?")) return;
+      state = freshState(); mathMemo = null; save(); renderHome(); return toast("Demo reset");
+
+    // question sheet
+    case "expand": v.expanded[el.dataset.key] = !v.expanded[el.dataset.key]; return renderSheet();
+    case "goto-claim": {
+      v.expanded[el.dataset.key] = true; renderSheet();
+      const c = body.querySelector(`.claim[data-key="${el.dataset.key}"]`);
+      c.scrollIntoView({ behavior: "smooth", block: "start" }); c.classList.add("flash");
+      return;
+    }
+    case "next": {
+      if (Object.keys(state.mine).length >= state.nextReflect) { state.nextReflect += REFLECT_EVERY; save(); v.stage = "reflect"; }
+      else { v.stage = null; v.rid = null; }
+      return renderSheet();
+    }
+    case "info-submit": {
+      const text = document.getElementById("info-text").value.trim();
+      state.requests.push({ id: "ir" + Date.now().toString(36), qid: v.qid, rid: v.rid, text, base: 0, by: ME, votes: { [ME]: 1 } });
+      save(); toast("Added to “What we need to learn”");
+    } // fall through to the results
+    case "info-skip": v.stage = "reveal"; return renderSheet();
+    case "reflect-submit":
+      state.reflections.push({ prompt: REFLECT_PROMPTS[state.reflectN % REFLECT_PROMPTS.length], text: document.getElementById("reflect-text").value.trim() });
+      toast("Reflection saved"); // fall through
+    case "reflect-skip": state.reflectN++; save(); v.stage = null; v.rid = null; return renderSheet();
+    case "respond": {
+      const step = state.questions.findIndex(q => q.id === el.dataset.qid);
+      return switchSheet({ type: "share", step, single: true, added: [] });
+    }
+
+    // share flow
+    case "share-add":
+      if (!shareAdd()) return;
+      if (v.single) { switchSheet(questionView(state.questions[v.step].id)); return toast("Response added. Others will see it and vote."); }
+      return renderSheet();
+    case "share-next": {
+      shareAdd(); // don't drop anything typed but not yet added
+      if (v.single) return switchSheet(questionView(state.questions[v.step].id));
+      if (v.step < state.questions.length - 1) { v.step++; renderSheet(); body.scrollTop = 0; return; }
+      return v.added.length ? switchSheet({ type: "thanks", added: v.added }) : closeSheet();
+    }
+    case "goto-q": return switchSheet(questionView(el.dataset.qid));
+
+    case "ask-submit": {
+      const text = document.getElementById("ask-text").value.trim();
+      state.proposed.push({ id: "pq" + Date.now().toString(36), text, votes: {} });
+      proposedOpen = true; save(); closeSheet(); return toast("Question proposed");
+    }
+  }
+});
+document.getElementById("fab").addEventListener("click", () => openSheet({ type: "share", step: 0, added: [] }));
+document.getElementById("sheet-close").addEventListener("click", closeSheet);
+scrim.addEventListener("click", closeSheet);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && sheetView) closeSheet(); });
+
+renderHome();
+</script>
+</body>
+</html>
