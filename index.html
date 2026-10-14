@@ -281,7 +281,7 @@ textarea.in:focus{outline:2px solid var(--accent-soft);border-color:var(--accent
 const SEED = {
   location: "Oakland, CA · Demo conversation",
   title: "Data centers in Oakland",
-  prompt: "A developer has proposed a large data center in downtown Oakland. Should the city approve it, and on what terms?",
+  prompt: "A developer has proposed a large data center in downtown Oakland. What should the city weigh as it decides, and what would a good outcome look like?",
   background: [
     "The facility would sit on a downtown site near West Oakland and draw substantial power from PG&E's local grid.",
     "Large data centers can use significant water for cooling, depending on the cooling design.",
@@ -293,7 +293,7 @@ const SEED = {
       unclaimed: [["West Oakland already carries more than its share of the region's pollution.", { A: .9, B: .55 }],
                   ["This decision will shape what kinds of industry Oakland attracts for decades.", { A: .75, B: .8 }],
                   ["Most people I talk to haven't heard about this project at all.", { A: .7, B: .6 }]] },
-    { id: "q1", text: "Are the benefits of a data center in Oakland worth the risks?",
+    { id: "q1", text: "What benefits and risks would this data center bring to Oakland?",
       claims: [
         { id: "c1", text: "The project's water and power demands would put too much strain on West Oakland.", p: { A: .9, B: .64 },
           responses: [["Backup diesel generators would add air pollution to neighborhoods that already have high asthma rates.", 1],
@@ -312,7 +312,7 @@ const SEED = {
       unclaimed: [["I'd want to see how a comparable project played out somewhere else before deciding.", { A: .7, B: .66 }],
                   ["It's not clear enough right now. We haven't gotten the information we need from the powers that be. We need to study this, with PGE and the developer providing more good information.", { A: .74, B: .52 }],
                   ["The developer should hold public meetings in West Oakland before any vote.", { A: .88, B: .6 }]] },
-    { id: "q2", text: "Should Oakland be investing in AI at all?",
+    { id: "q2", text: "What kind of relationship should Oakland have with the AI industry?",
       claims: [
         { id: "c4", text: "AI tools could make city services faster and easier to use.", p: { A: .7, B: .82 },
           responses: [["Permit wait times are a real problem that better software could fix.", 1],
@@ -329,7 +329,7 @@ const SEED = {
                       ["The city can't compete with tech salaries to hire that talent.", -1]] },
       ],
       unclaimed: [["Peralta and Laney should get funding for AI training programs.", { A: .7, B: .78 }]] },
-    { id: "q3", text: "Who should have a say in siting decisions like this?",
+    { id: "q3", text: "How should siting decisions like this be made, and who should have a say?",
       claims: [
         { id: "c8", text: "Residents within a mile should have veto power over siting.", p: { A: .84, B: .28 },
           responses: [["The people who breathe the air should decide.", 1],
@@ -343,7 +343,7 @@ const SEED = {
       ],
       unclaimed: [["Youth should get a formal voice, since they'll live with this longest.", { A: .72, B: .5 }],
                   ["Tribal nations with ties to this land should be consulted.", { A: .76, B: .55 }]] },
-    { id: "q4", text: "What should be done?", claims: [],
+    { id: "q4", text: "What should happen next?", claims: [],
       unclaimed: [["Pause approval until an independent environmental review is finished.", { A: .88, B: .35 }],
                   ["Approve it, but only with a binding community benefits agreement.", { A: .55, B: .82 }],
                   ["Hold a series of public meetings in West Oakland before any vote.", { A: .86, B: .62 }]] },
@@ -353,8 +353,8 @@ const SEED = {
                   ["What the site could be used for instead.", { A: .64, B: .42 }]] },
   ],
   proposed: [
-    { text: "Should any approval require a binding community benefits agreement?", p: { A: .9, B: .66 } },
-    { text: "Is this really about the data center, or about how the Port uses its land?", p: { A: .46, B: .38 } },
+    { text: "What commitments should the developer make to the community?", p: { A: .9, B: .66 } },
+    { text: "How should community voice shape the Port's decisions about its land?", p: { A: .46, B: .38 } },
   ],
   // Things participants have said they need to know. `base` stands in for earlier requesters.
   requests: [
