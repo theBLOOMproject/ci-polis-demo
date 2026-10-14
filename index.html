@@ -281,7 +281,7 @@ textarea.in:focus{outline:2px solid var(--accent-soft);border-color:var(--accent
 const SEED = {
   location: "San Francisco, CA · Demo conversation",
   title: "Technology in SFUSD classrooms",
-  prompt: "SFUSD is drafting its first districtwide policy on classroom screens and AI, with a board vote planned for March 2027. What should it say?",
+  prompt: "SFUSD is drafting its first districtwide policy on classroom screens and AI, with a board vote planned for March 2027. What does a good policy need to get right?",
   background: [
     "SFUSD has no districtwide screen-time or AI policy yet. Schools and teachers decide how devices are used.",
     "A draft policy is due for a first reading in February 2027, with a board vote planned for March 2027.",
@@ -294,7 +294,7 @@ const SEED = {
       unclaimed: [["My second grader comes home worn out from screens and can't tell me what they learned.", { A: .88, B: .45 }],
                   ["For my kid with dyslexia, text-to-speech is the difference between reading and not reading.", { A: .6, B: .9 }],
                   ["Teachers were never really asked what they need from classroom technology.", { A: .8, B: .75 }]] },
-    { id: "q1", text: "How much screen time should students have in class?",
+    { id: "q1", text: "What role should screens play in learning at different ages?",
       claims: [
         { id: "c1", text: "Young children (TK–2nd grade) shouldn't use individual devices at school.", p: { A: .92, B: .55 },
           responses: [["Little kids learn to read with books, hands and voices, not tablets.", 1],
@@ -310,7 +310,7 @@ const SEED = {
       ],
       unclaimed: [["Students with IEPs should keep whatever technology their plan calls for, whatever the cap.", { A: .85, B: .92 }],
                   ["Middle schoolers need to learn typing and research skills somewhere.", { A: .5, B: .85 }]] },
-    { id: "q2", text: "Should AI tools be used in SFUSD classrooms right now?",
+    { id: "q2", text: "How should SFUSD approach AI in its classrooms?",
       claims: [
         { id: "c4", text: "SFUSD should pause student use of generative AI until there's evidence it helps learning.", p: { A: .9, B: .35 },
           responses: [["New York and LA have already paused or limited it; our kids shouldn't be the experiment.", 1],
@@ -326,7 +326,7 @@ const SEED = {
                       ["Any AI use by teachers normalizes it for students.", -1]] },
       ],
       unclaimed: [["High schoolers should be taught how AI works, including its limits, before using it.", { A: .75, B: .88 }]] },
-    { id: "q3", text: "Who should decide which apps and tools come into classrooms?",
+    { id: "q3", text: "How should decisions about classroom apps and tools be made, and by whom?",
       claims: [
         { id: "c7", text: "Parents should give app-by-app consent before their child's data is shared with a vendor.", p: { A: .92, B: .6 },
           responses: [["I signed one form in August and have no idea what my child's data is used for.", 1],
@@ -339,7 +339,7 @@ const SEED = {
                       ["Partnerships bring in money and expertise the district can't afford on its own.", -1]] },
       ],
       unclaimed: [["Each school community should be able to set stricter rules than the district minimum.", { A: .7, B: .55 }]] },
-    { id: "q4", text: "What should be done?", claims: [],
+    { id: "q4", text: "What should happen next?", claims: [],
       unclaimed: [["Adopt LA-style limits now and revisit them after a year of data.", { A: .9, B: .35 }],
                   ["Run a pilot comparing classrooms with and without 1:1 devices before deciding.", { A: .6, B: .8 }],
                   ["Publish a plain-language list of every app used in each classroom.", { A: .92, B: .78 }]] },
@@ -350,7 +350,7 @@ const SEED = {
   ],
   proposed: [
     { text: "How should SFUSD measure whether a classroom technology is actually helping students learn?", p: { A: .88, B: .85 } },
-    { text: "Should rules for phones and rules for school-issued devices be decided together?", p: { A: .6, B: .45 } },
+    { text: "How should rules for phones and for school-issued devices fit together?", p: { A: .6, B: .45 } },
   ],
   // Things participants have said they need to know. `base` stands in for earlier requesters.
   requests: [
