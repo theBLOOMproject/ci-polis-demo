@@ -426,7 +426,13 @@ function addParticipant(s, rng) {
 }
 
 let state;
-function load(){ try { const raw = localStorage.getItem(STORE_KEY); if (raw) return JSON.parse(raw); } catch (e) {} return freshState(); }
+function load(){ try { const raw = localStorage.getItem(STORE_KEY); if (raw) return syncSeedText(JSON.parse(raw)); } catch (e) {} return freshState(); }
+// Saved demos keep their own copy of question text. Refresh the seeded wording so edits to SEED show up without a reset.
+function syncSeedText(s){
+  for (const q of s.questions) { const seeded = SEED.questions.find(x => x.id === q.id); if (seeded) q.text = seeded.text; }
+  s.proposed.forEach(p => { const i = /^pq(\d+)$/.exec(p.id); if (i && SEED.proposed[i[1]]) p.text = SEED.proposed[i[1]].text; });
+  return s;
+}
 function save(){ mathRev++; try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
 
 // ---------- Polis math (memoised; recomputed after every change) ----------
@@ -454,7 +460,7 @@ state = load();
 function voteEntries(rid){ const v = Object.entries(state.votes[rid]); if (state.mine[rid] !== undefined) v.push([ME, state.mine[rid]]); return v; }
 const infoCount = rid => Object.keys(state.info[rid] || {}).length;
 const reqCount = r => r.base + Object.keys(r.votes).length;
-const isOpen = q => !q.claims.length;
+const hasNoClaims = q => !q.claims.length;
 
 // A claim pools the votes on its responses (flipping responses that argue against it),
 // then reads the per-group support from Polis's groups.
@@ -557,8 +563,8 @@ function renderHome(){
     ${legend()}
     <div class="qlist">${state.questions.map(q => {
       const qs = questionStats(q.id);
-      const meta = isOpen(q)
-        ? `<span class="open-tag">Open question</span>${plural(qs.responses, "response")} · ${qs.voters} participants`
+      const meta = hasNoClaims(q)
+        ? `<span class="open-tag" title="Responses haven't been grouped into claims yet">Gathering responses</span>${plural(qs.responses, "response")} · ${qs.voters} participants`
         : `<span class="icons">${q.claims.map(c => ICON[claimStats(c).status]()).join("")}</span>${plural(q.claims.length, "claim")} · ${plural(qs.responses, "response")} · ${qs.voters} participants`;
       return `<button class="qrow" data-q="${q.id}"><div><div class="qt">${esc(q.text)}</div><div class="meta">${meta}</div></div>
         <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>`;
@@ -742,7 +748,7 @@ function stmtRow(r){
 function renderQuestion(qid){
   const q = state.questions.find(x => x.id === qid);
   const M = getMath(), G = M.groups.length, v = sheetView;
-  document.getElementById("sheet-label").textContent = isOpen(q) ? "Open question" : "Question";
+  document.getElementById("sheet-label").textContent = "Question";
   const qs = questionStats(qid);
   const rs = Object.values(state.responses).filter(r => r.qid === qid);
   const claims = q.claims.map(cid => ({ c: state.claims[cid], s: claimStats(cid), rs: rs.filter(r => r.claim === cid) }));
@@ -769,7 +775,7 @@ function renderQuestion(qid){
         <h4>${esc(c.text)}</h4>
         <div class="gbars" style="grid-template-columns:repeat(${Math.max(G, 1)},1fr)">${M.groups.map(g => `<div class="gbar"><div class="row"><span><span class="gdot" style="background:${gColor(g.id)}"></span>Group ${GL(g.id)}</span><b>${pct(s.groups[g.id])}</b></div><div class="bar"><i style="width:${s.groups[g.id] * 100}%"></i></div></div>`).join("")}</div>
         ${expander(c.id, rs)}</div>`).join("")}
-    ${unclaimed.length ? `<div class="claim unclaimed" data-key="_u"><div class="st">${ICON.unclaimed(15)} ${isOpen(q) ? "Responses so far: not grouped into claims yet" : "Not part of a claim yet"}</div>${expander("_u", unclaimed)}</div>` : ""}`;
+    ${unclaimed.length ? `<div class="claim unclaimed" data-key="_u"><div class="st">${ICON.unclaimed(15)} ${hasNoClaims(q) ? "Responses so far: not grouped into claims yet" : "Not part of a claim yet"}</div>${expander("_u", unclaimed)}</div>` : ""}`;
 
   wireCounter("info-text", null, "info-submit");
   wireCounter("reflect-text", null, "reflect-submit");
@@ -793,7 +799,7 @@ function renderShare(){
   document.getElementById("sheet-label").textContent = "Share your thoughts";
   body.innerHTML = `
     ${v.single ? "" : `<div class="steps" style="grid-template-columns:repeat(${n},1fr)">${state.questions.map((_, i) => `<i class="${i <= v.step ? "on" : ""}"></i>`).join("")}</div>
-    <div class="eyebrow" style="color:var(--accent)">Question ${v.step + 1} of ${n}${isOpen(q) ? " · open question" : ""}</div>`}
+    <div class="eyebrow" style="color:var(--accent)">Question ${v.step + 1} of ${n}</div>`}
     <h2 style="margin-top:6px">${esc(q.text)}</h2>
     ${mineHere.length ? `<div class="field-label">Your responses</div>${mineHere.map(a => `<div class="yr">${esc(a.text)}</div>`).join("")}` : ""}
     <div class="field-label">${mineHere.length ? "Add another" : "Your response"}</div>
