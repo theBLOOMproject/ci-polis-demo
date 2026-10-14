@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Data centers in Oakland</title>
+<title>Technology in SFUSD classrooms</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -234,92 +234,89 @@ textarea.in:focus{outline:2px solid var(--accent-soft);border-color:var(--accent
 // a response's stance is +1 if it supports its claim, -1 if it argues against it.
 // Questions without claims are open questions: their responses carry their own `p`.
 const SEED = {
-  location: "Oakland, CA · Demo conversation",
-  title: "Data centers in Oakland",
-  prompt: "A developer has proposed a large data center in downtown Oakland. Should the city approve it, and on what terms?",
+  location: "San Francisco, CA · Demo conversation",
+  title: "Technology in SFUSD classrooms",
+  prompt: "SFUSD is drafting its first districtwide policy on classroom screens and AI, with a board vote planned for March 2027. What should it say?",
   background: [
-    "The facility would sit on a downtown site near West Oakland and draw substantial power from PG&E's local grid.",
-    "Large data centers can use significant water for cooling, depending on the cooling design.",
-    "The city would gain new tax revenue; the developer is reported to be seeking incentives.",
-    "Approval would go through the Planning Commission and City Council, with a public comment period.",
+    "SFUSD has no districtwide screen-time or AI policy yet. Schools and teachers decide how devices are used.",
+    "A draft policy is due for a first reading in February 2027, with a board vote planned for March 2027.",
+    "The parent-educator coalition Tech in Check is petitioning to disable generative AI on student devices, end the Amira AI reading tutor, stop giving each elementary student a device, and make paper homework the default through 5th grade.",
+    "Los Angeles has banned in-school screen time through 1st grade and capped it at an hour a day in grades 2–5. New York City has paused student AI use through 8th grade for a year.",
+    "SFUSD uses Amira, an AI reading tutor for grades K–5, under a contract reported at just under $400,000 a year.",
   ],
   questions: [
     { id: "q0", text: "What do you think everyone should know about this?", claims: [],
-      unclaimed: [["West Oakland already carries more than its share of the region's pollution.", { A: .9, B: .55 }],
-                  ["This decision will shape what kinds of industry Oakland attracts for decades.", { A: .75, B: .8 }],
-                  ["Most people I talk to haven't heard about this project at all.", { A: .7, B: .6 }]] },
-    { id: "q1", text: "Are the benefits of a data center in Oakland worth the risks?",
+      unclaimed: [["My second grader comes home worn out from screens and can't tell me what they learned.", { A: .88, B: .45 }],
+                  ["For my kid with dyslexia, text-to-speech is the difference between reading and not reading.", { A: .6, B: .9 }],
+                  ["Teachers were never really asked what they need from classroom technology.", { A: .8, B: .75 }]] },
+    { id: "q1", text: "How much screen time should students have in class?",
       claims: [
-        { id: "c1", text: "The project's water and power demands would put too much strain on West Oakland.", p: { A: .9, B: .64 },
-          responses: [["Backup diesel generators would add air pollution to neighborhoods that already have high asthma rates.", 1],
-                      ["The environmental cost is overstated; new facilities use closed-loop cooling.", -1],
-                      ["Cooling a large data center would use water Oakland can't spare in drought years.", 1],
-                      ["PG&E's grid in West Oakland is already close to capacity.", 1]] },
-        { id: "c2", text: "Tax revenue from the project would meaningfully help Oakland's budget.", p: { A: .46, B: .8 },
-          responses: [["Oakland's budget deficit is serious enough that new tax revenue matters.", 1],
-                      ["Tax breaks offered to land the project would cancel out the revenue.", -1],
-                      ["Revenue should be earmarked for the neighborhoods that host the facility.", 1]] },
-        { id: "c3", text: "The project would bring few lasting jobs for Oakland residents.", p: { A: .86, B: .18 },
-          responses: [["Union construction jobs alone make this worth doing.", -1],
-                      ["Local hiring promises are rarely enforced after approval.", 1],
-                      ["Once it's built, a data center runs with a few dozen staff.", 1]] },
+        { id: "c1", text: "Young children (TK–2nd grade) shouldn't use individual devices at school.", p: { A: .92, B: .55 },
+          responses: [["Little kids learn to read with books, hands and voices, not tablets.", 1],
+                      ["Shared devices on carts are enough for the younger grades.", 1],
+                      ["Kids need early practice with devices to be ready for state testing.", -1]] },
+        { id: "c2", text: "A daily cap on classroom screen time is better than leaving it to each teacher.", p: { A: .88, B: .4 },
+          responses: [["Some classrooms are on Chromebooks most of the day and parents have no idea.", 1],
+                      ["Teachers know their students best; a one-size-fits-all cap ties their hands.", -1],
+                      ["A cap would at least make screen time visible to families.", 1]] },
+        { id: "c3", text: "Paper homework should be the default through 5th grade.", p: { A: .85, B: .5 },
+          responses: [["Homework on a Chromebook turns into YouTube by 7pm.", 1],
+                      ["Families without printers or a quiet space find online homework easier to manage.", -1]] },
       ],
-      unclaimed: [["I'd want to see how a comparable project played out somewhere else before deciding.", { A: .7, B: .66 }],
-                  ["It's not clear enough right now. We haven't gotten the information we need from the powers that be. We need to study this, with PGE and the developer providing more good information.", { A: .74, B: .52 }],
-                  ["The developer should hold public meetings in West Oakland before any vote.", { A: .88, B: .6 }]] },
-    { id: "q2", text: "Should Oakland be investing in AI at all?",
+      unclaimed: [["Students with IEPs should keep whatever technology their plan calls for, whatever the cap.", { A: .85, B: .92 }],
+                  ["Middle schoolers need to learn typing and research skills somewhere.", { A: .5, B: .85 }]] },
+    { id: "q2", text: "Should AI tools be used in SFUSD classrooms right now?",
       claims: [
-        { id: "c4", text: "AI tools could make city services faster and easier to use.", p: { A: .7, B: .82 },
-          responses: [["Permit wait times are a real problem that better software could fix.", 1],
-                      ["Chatbots for city services mostly frustrate residents.", -1],
-                      ["Translation tools could help non-English speakers reach the city.", 1]] },
-        { id: "c5", text: "Oakland should offer large subsidies to attract AI companies.", p: { A: .14, B: .32 },
-          responses: [["Other Bay Area cities are competing for these firms; we have to compete too.", 1],
-                      ["Public money should go to housing before tech incentives.", -1]] },
-        { id: "c6", text: "AI will cost more Oakland jobs than it creates.", p: { A: .8, B: .3 },
-          responses: [["Call-center and clerical jobs here are already being automated.", 1],
-                      ["Every new technology has created more jobs than it destroyed.", -1]] },
-        { id: "c7", text: "The city should build its own AI expertise rather than rely on vendors.", p: { A: .38, B: .76 },
-          responses: [["Vendor lock-in has burned the city on software before.", 1],
-                      ["The city can't compete with tech salaries to hire that talent.", -1]] },
+        { id: "c4", text: "SFUSD should pause student use of generative AI until there's evidence it helps learning.", p: { A: .9, B: .35 },
+          responses: [["New York and LA have already paused or limited it; our kids shouldn't be the experiment.", 1],
+                      ["Students use AI at home anyway; school is where they can learn to use it well.", -1],
+                      ["The district hasn't shown that any of its AI tools improve outcomes.", 1]] },
+        { id: "c5", text: "The Amira AI reading tutor should be discontinued.", p: { A: .85, B: .3 },
+          responses: [["Families weren't clearly told that Amira records children reading aloud.", 1],
+                      ["Amira gives teachers reading data they don't have time to collect themselves.", -1],
+                      ["My kid finds Amira frustrating; it marks correct answers wrong.", 1]] },
+        { id: "c6", text: "Teachers should be allowed to use AI for lesson planning, but not for grading.", p: { A: .6, B: .8 },
+          responses: [["AI can save teachers hours of prep time they could spend with students.", 1],
+                      ["Grading is a relationship; a machine shouldn't judge a child's writing.", 1],
+                      ["Any AI use by teachers normalizes it for students.", -1]] },
       ],
-      unclaimed: [["Peralta and Laney should get funding for AI training programs.", { A: .7, B: .78 }]] },
-    { id: "q3", text: "Who should have a say in siting decisions like this?",
+      unclaimed: [["High schoolers should be taught how AI works, including its limits, before using it.", { A: .75, B: .88 }]] },
+    { id: "q3", text: "Who should decide which apps and tools come into classrooms?",
       claims: [
-        { id: "c8", text: "Residents within a mile should have veto power over siting.", p: { A: .84, B: .28 },
-          responses: [["The people who breathe the air should decide.", 1],
-                      ["A veto lets a few blocks block projects the whole city needs.", -1]] },
-        { id: "c9", text: "The Port and City Council are best placed to decide.", p: { A: .24, B: .7 },
-          responses: [["That's what we elect the Council to do.", 1],
-                      ["The Port has never been accountable to West Oakland.", -1]] },
-        { id: "c10", text: "State energy regulators should have the final say on grid impacts.", p: { A: .4, B: .66 },
-          responses: [["Grid capacity is a regional question, not a neighborhood one.", 1],
-                      ["Sacramento doesn't know what's happening on the ground here.", -1]] },
+        { id: "c7", text: "Parents should give app-by-app consent before their child's data is shared with a vendor.", p: { A: .92, B: .6 },
+          responses: [["I signed one form in August and have no idea what my child's data is used for.", 1],
+                      ["App-by-app consent would bury families in paperwork and stall teaching.", -1]] },
+        { id: "c8", text: "A standing EdTech and AI working group should include parents, teachers and students.", p: { A: .88, B: .78 },
+          responses: [["Teachers and students should have a formal say, not just district staff.", 1],
+                      ["Committees slow everything down; set clear rules and let schools follow them.", -1]] },
+        { id: "c9", text: "Corporate partnerships shouldn't shape which tools students use.", p: { A: .85, B: .45 },
+          responses: [["Tech companies shouldn't be testing products on our children.", 1],
+                      ["Partnerships bring in money and expertise the district can't afford on its own.", -1]] },
       ],
-      unclaimed: [["Youth should get a formal voice, since they'll live with this longest.", { A: .72, B: .5 }],
-                  ["Tribal nations with ties to this land should be consulted.", { A: .76, B: .55 }]] },
+      unclaimed: [["Each school community should be able to set stricter rules than the district minimum.", { A: .7, B: .55 }]] },
     { id: "q4", text: "What should be done?", claims: [],
-      unclaimed: [["Pause approval until an independent environmental review is finished.", { A: .88, B: .35 }],
-                  ["Approve it, but only with a binding community benefits agreement.", { A: .55, B: .82 }],
-                  ["Hold a series of public meetings in West Oakland before any vote.", { A: .86, B: .62 }]] },
+      unclaimed: [["Adopt LA-style limits now and revisit them after a year of data.", { A: .9, B: .35 }],
+                  ["Run a pilot comparing classrooms with and without 1:1 devices before deciding.", { A: .6, B: .8 }],
+                  ["Publish a plain-language list of every app used in each classroom.", { A: .92, B: .78 }]] },
     { id: "q5", text: "What are we not talking about?", claims: [],
-      unclaimed: [["Who actually profits from this: Oakland, or out-of-state investors?", { A: .8, B: .5 }],
-                  ["How AI growth will change electricity prices for ordinary households.", { A: .78, B: .66 }],
-                  ["What the site could be used for instead.", { A: .64, B: .42 }]] },
+      unclaimed: [["Phones at lunch and recess matter as much as Chromebooks in class.", { A: .75, B: .6 }],
+                  ["Teachers need training and time, not just rules.", { A: .7, B: .85 }],
+                  ["Kids without internet at home depend on school devices for access.", { A: .5, B: .85 }]] },
   ],
   proposed: [
-    { text: "Should any approval require a binding community benefits agreement?", p: { A: .9, B: .66 } },
-    { text: "Is this really about the data center, or about how the Port uses its land?", p: { A: .46, B: .38 } },
+    { text: "How should SFUSD measure whether a classroom technology is actually helping students learn?", p: { A: .88, B: .85 } },
+    { text: "Should rules for phones and rules for school-issued devices be decided together?", p: { A: .6, B: .45 } },
   ],
   // Things participants have said they need to know. `base` stands in for earlier requesters.
   requests: [
-    { qid: "q1", text: "How much water would the facility use for cooling, and where would it come from?", base: 14 },
-    { qid: "q1", text: "What has PG&E said about grid capacity in West Oakland?", base: 11 },
-    { qid: "q1", text: "What tax breaks, if any, has the developer asked for?", base: 9 },
-    { qid: "q1", text: "How many permanent local jobs have comparable data centers created?", base: 7 },
-    { qid: "q3", text: "Who has formal authority over this siting decision?", base: 6 },
+    { qid: "q2", text: "What data does Amira collect about my child, and how long is it kept?", base: 16 },
+    { qid: "q2", text: "Is there evidence that Amira has improved reading in SFUSD?", base: 13 },
+    { qid: "q1", text: "How many minutes a day are students actually on devices, by grade?", base: 11 },
+    { qid: "q3", text: "Which apps currently have access to student data?", base: 9 },
+    { qid: "q1", text: "What has happened to learning in LA since its screen-time limits?", base: 6 },
   ],
 };
+
 const REFLECT_PROMPTS = [
   "What's coming up for you as you read these responses?",
   "What seems most important about handling this well as a community?",
@@ -330,7 +327,7 @@ const PROMOTE_AT = 0.7;     // a proposed question joins the conversation once e
 const PROMOTE_MIN_N = 3;    // ...with at least this many raters per group
 const FIRST_REFLECT = 8;    // first reflection pause after this many of your votes
 const REFLECT_EVERY = 12;   // then every this many votes
-const STORE_KEY = "ci-polis-demo-v3";
+const STORE_KEY = "ci-polis-sfusd-v1";
 const ME = "me";
 
 // ---------- PRNG ----------
@@ -501,7 +498,7 @@ function renderHome(){
     <p class="prompt">${esc(SEED.prompt)}</p>
     <details class="context"><summary>Background ${ICON.chevDown}</summary>
       <ul>${SEED.background.map(b => `<li>${esc(b)}</li>`).join("")}</ul>
-      <p class="note">Sample background for this demo. Replace it with verified facts and sources before a pilot.</p>
+      <p class="note">Sample background compiled from October 2026 news coverage (SF Standard, Mission Local). Verify against current SFUSD board materials before a pilot.</p>
     </details>
     <div class="stats">
       <div class="stat"><div class="n">${ICON.user}${fmt(t.participants)}</div><div class="l">participants</div></div>
