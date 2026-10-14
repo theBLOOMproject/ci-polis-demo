@@ -204,6 +204,39 @@ textarea.in:focus{outline:2px solid var(--accent-soft);border-color:var(--accent
 .thanks-list{margin:14px 0 18px}
 .thanks-list div{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:7px 0;border-top:1px solid var(--line)}
 .thanks-list span:last-child{color:var(--ink-3);white-space:nowrap}
+/* questions rail */
+.rail{position:fixed;top:0;right:0;bottom:0;width:min(320px,100%);background:var(--surface);border-left:1px solid var(--line-2);z-index:55;padding:18px 16px 24px;overflow-y:auto;transform:translateX(100%);visibility:hidden;transition:transform .25s,visibility 0s .25s;box-shadow:-6px 0 24px rgba(20,25,40,.1)}
+.rail.open{transform:none;visibility:visible;transition:transform .25s}
+.rail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rail-head h3{margin:2px 0 0;font-size:17px}
+.rail-close{width:28px;height:28px;border-radius:50%;background:var(--bg);display:grid;place-items:center;flex:none}
+.rail-close:hover{background:var(--line)}
+.rail-intro{font-size:12px;color:var(--ink-3);margin:8px 0 12px}
+.rail-ctx{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink-2);background:var(--accent-soft);border-radius:8px;padding:7px 9px;margin-bottom:8px;cursor:pointer}
+.rail-ctx input{margin:2px 0 0;accent-color:var(--accent)}
+.rail-row{display:flex;justify-content:space-between;align-items:center;margin:6px 0 16px}
+.rail-row .count{margin:0}
+.rail-tabs{display:flex;gap:4px;margin:2px 0 6px}
+.rail-tabs button{font-size:11.5px;padding:3px 10px;border-radius:999px;color:var(--ink-2)}
+.rail-tabs button.on{background:var(--ink);color:#fff}
+.rq{padding:8px 0;border-top:1px solid var(--line);display:flex;gap:8px;align-items:flex-start;font-size:12.5px}
+.rq .t{flex:1}
+.rq .m{font-size:10.5px;color:var(--ink-3);margin-top:2px}
+.rq .x{color:var(--ink-3);font-size:16px;line-height:1;padding:0 4px}
+.rq .x:hover{color:var(--ink)}
+.rail-pill{position:fixed;left:16px;bottom:16px;height:40px;padding:0 14px 0 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line-2);box-shadow:0 4px 14px rgba(20,25,40,.15);z-index:56;display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:13px}
+.rail-pill[hidden]{display:none}
+.rail-pill .qm{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:12px}
+.rail-pill b{color:var(--accent)}
+.link-sm{display:block;font-size:12px;color:var(--accent);font-weight:600;margin-top:2px}
+@media (min-width:1100px){
+  body.rail-docked{padding-right:320px}
+  body.rail-docked .sheet{left:calc((100% - 320px) / 2)}
+  body.rail-docked .scrim{right:320px}
+  body.rail-docked .fab{right:336px}
+  body.rail-docked .toast{left:calc((100% - 320px) / 2)}
+  body.rail-docked .rail{box-shadow:none}
+}
 @media (max-width:560px){
   .sheet-body{padding:8px 18px 36px}
   .stat{padding:0 8px}
@@ -224,6 +257,18 @@ textarea.in:focus{outline:2px solid var(--accent-soft);border-color:var(--accent
   <div class="sheet-body" id="sheet-body"></div>
 </div>
 <div class="toast" id="toast"></div>
+<button class="rail-pill" id="rail-pill" data-act="open-rail" aria-label="Open your questions"><span class="qm">?</span>Questions <b id="rail-pill-n"></b></button>
+<aside class="rail" id="rail" aria-label="What I don't know yet">
+  <div class="rail-head">
+    <div><div class="eyebrow">Your questions</div><h3>What I don't know yet</h3></div>
+    <button class="rail-close" data-act="close-rail" aria-label="Hide questions"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <p class="rail-intro">Jot questions down as they come up, even mid-sentence. They join the shared research list, where others can add a “me too” or bring back a source.</p>
+  <div id="rail-context"></div>
+  <textarea class="in small" id="rail-text" maxlength="200" placeholder="What would you need to know?"></textarea>
+  <div class="rail-row"><span class="count" id="rail-count">0/200</span><button class="btn-sm dark" data-act="rail-add" id="rail-add" disabled>Add question</button></div>
+  <div id="rail-list"></div>
+</aside>
 
 <script src="polis-math.js"></script>
 <script>
@@ -529,13 +574,14 @@ function renderHome(){
     </div>
     <div class="footer"><button data-act="simulate">Simulate 10 participants</button><button data-act="reset">Reset demo</button>
       ${state.reflections.length ? `<button data-act="reflections">Your reflections (${state.reflections.length})</button>` : ""}</div>`;
+  renderRail();
 }
 
 // "Need more info" votes and the requests people write become a shared research list.
 function renderRequests(){
   const reqs = [...state.requests].sort((a, b) => reqCount(b) - reqCount(a)).slice(0, 6);
   const unsure = Object.values(state.responses).map(r => [r, infoCount(r.id)]).filter(([, n]) => n).sort((a, b) => b[1] - a[1]).slice(0, 3);
-  const qShort = qid => { const q = state.questions.find(x => x.id === qid); return q ? q.text : ""; };
+  const qShort = qid => { const q = state.questions.find(x => x.id === qid); return q ? q.text : "General"; };
   return `<div class="section-head"><span class="eyebrow">What we need to learn · ${state.requests.length}</span></div>
     <div class="card">
       <p class="card-intro">Things people say they need to know before they can decide. Pick one up and bring back a good source.</p>
@@ -619,6 +665,7 @@ function renderSheet(){
   clearInterval(tickerTimer);
   if (!sheetView) return;
   ({ question: () => renderQuestion(sheetView.qid), share: renderShare, thanks: renderThanks, ask: renderAsk, reflections: renderReflections })[sheetView.type]();
+  renderRail(); // the rail links new questions to whatever question is open
 }
 
 function myGroupNote(M){
@@ -756,6 +803,7 @@ function renderShare(){
     ${mineHere.length ? "" : `<p class="hint">Others will agree, disagree, or pass. Once it has a few votes it's grouped with related responses into a claim. You can add more than one.</p>`}
     <textarea class="in" id="share-text" maxlength="280" placeholder="Say it in a sentence or two"></textarea>
     <div class="count" id="share-count">0/280</div>
+    <button class="link-sm" data-act="open-rail">Something you don't know yet? Add it to your questions →</button>
     <div class="actions"><button class="ghost" data-act="share-next">${skipLabel}</button><button class="btn-primary" data-act="share-add" id="share-submit" disabled>Add response</button></div>`;
   wireCounter("share-text", "share-count", "share-submit");
 }
@@ -920,6 +968,15 @@ document.addEventListener("click", e => {
     }
     case "goto-q": return switchSheet(questionView(el.dataset.qid));
 
+    // questions rail
+    case "open-rail": return setRail(true, true);
+    case "close-rail": return setRail(false);
+    case "rail-tab": railTab = el.dataset.tab; return renderRail();
+    case "rail-add": return railAdd();
+    case "rail-remove":
+      state.requests = state.requests.filter(r => r.id !== el.dataset.id);
+      save(); return renderHome();
+
     case "ask-submit": {
       const text = document.getElementById("ask-text").value.trim();
       state.proposed.push({ id: "pq" + Date.now().toString(36), text, votes: {} });
@@ -930,8 +987,79 @@ document.addEventListener("click", e => {
 document.getElementById("fab").addEventListener("click", () => openSheet({ type: "share", step: 0, added: [] }));
 document.getElementById("sheet-close").addEventListener("click", closeSheet);
 scrim.addEventListener("click", closeSheet);
-document.addEventListener("keydown", e => { if (e.key === "Escape" && sheetView) closeSheet(); });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (e.target.closest && e.target.closest("#rail") && !WIDE.matches) return setRail(false);
+  if (sheetView) closeSheet();
+});
 
+// ---------- Questions rail ----------
+// A persistent "what I don't know yet" panel: docked on wide screens, a drawer on narrow ones.
+// Questions added here join state.requests, the same list "Need info" votes feed.
+const rail = document.getElementById("rail"), railText = document.getElementById("rail-text");
+const WIDE = window.matchMedia("(min-width: 1100px)");
+const prefGet = (k, d) => { try { const v = localStorage.getItem("ci-pref-" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
+const prefSet = (k, v) => { try { localStorage.setItem("ci-pref-" + k, JSON.stringify(v)); } catch (e) {} };
+let railOpen = WIDE.matches && prefGet("railOpen", true), railTab = "here", railLink = true;
+
+function applyRail(){
+  rail.classList.toggle("open", railOpen);
+  document.body.classList.toggle("rail-docked", railOpen && WIDE.matches);
+  document.getElementById("rail-pill").hidden = railOpen;
+}
+function setRail(open, focus){
+  railOpen = open;
+  if (WIDE.matches) prefSet("railOpen", open);
+  applyRail();
+  if (open && focus) setTimeout(() => railText.focus({ preventScroll: true }), 60);
+}
+WIDE.addEventListener("change", () => { railOpen = WIDE.matches && prefGet("railOpen", true); applyRail(); });
+
+function contextQid(){
+  if (sheetView?.type === "question") return sheetView.qid;
+  if (sheetView?.type === "share") return state.questions[sheetView.step]?.id;
+  return null;
+}
+
+function renderRail(){
+  const qid = contextQid(), q = qid && state.questions.find(x => x.id === qid);
+  const qText = id => state.questions.find(x => x.id === id)?.text || "General";
+  const mine = state.requests.filter(r => r.by === ME);
+  const here = q && railTab === "here";
+  const others = state.requests.filter(r => r.by !== ME && (!here || r.qid === qid)).sort((a, b) => reqCount(b) - reqCount(a));
+  document.getElementById("rail-context").innerHTML = q
+    ? `<label class="rail-ctx"><input type="checkbox" id="rail-link" ${railLink ? "checked" : ""}><span>Link to <b>${esc(q.text)}</b></span></label>` : "";
+  document.getElementById("rail-list").innerHTML = `
+    <div class="subhead">Yours · ${mine.length}</div>
+    ${mine.length ? mine.map(r => `<div class="rq"><div class="t">${esc(r.text)}<div class="m">${esc(qText(r.qid))} · ${plural(reqCount(r), "person")}</div></div>
+        <button class="x" data-act="rail-remove" data-id="${r.id}" title="Remove" aria-label="Remove">×</button></div>`).join("")
+      : `<div class="empty-note">Nothing yet. Add a question whenever something comes up.</div>`}
+    <div class="subhead" style="margin-top:14px">From everyone</div>
+    ${q ? `<div class="rail-tabs"><button class="${here ? "on" : ""}" data-act="rail-tab" data-tab="here">This question</button><button class="${here ? "" : "on"}" data-act="rail-tab" data-tab="all">All</button></div>` : ""}
+    ${others.length ? others.map(r => `<div class="rq"><div class="t">${esc(r.text)}<div class="m">${here ? "" : esc(qText(r.qid)) + " · "}${plural(reqCount(r), "person")}</div></div>
+        <button class="chip ${r.votes[ME] ? "on" : ""}" data-req="${r.id}">${r.votes[ME] ? "✓ Me too" : "Me too"}</button></div>`).join("")
+      : `<div class="empty-note">No questions about this yet.</div>`}`;
+  document.getElementById("rail-pill-n").textContent = mine.length || "";
+}
+
+function railAdd(){
+  const text = railText.value.trim();
+  if (!text) return;
+  const qid = (railLink && contextQid()) || null;
+  state.requests.push({ id: "ir" + Date.now().toString(36), qid, rid: null, text, base: 0, by: ME, votes: { [ME]: 1 } });
+  railText.value = ""; railText.dispatchEvent(new Event("input"));
+  save(); renderHome();
+  toast("Added to your questions");
+}
+
+railText.addEventListener("input", () => {
+  document.getElementById("rail-count").textContent = `${railText.value.length}/${railText.maxLength}`;
+  document.getElementById("rail-add").disabled = !railText.value.trim();
+});
+railText.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); railAdd(); } });
+rail.addEventListener("change", e => { if (e.target.id === "rail-link") railLink = e.target.checked; });
+
+applyRail();
 renderHome();
 </script>
 </body>
